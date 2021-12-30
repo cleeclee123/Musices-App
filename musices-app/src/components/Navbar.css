@@ -1,0 +1,35 @@
+.mid {
+	background-color: rgb(247, 0, 255);
+	display: inline-block;
+	width: 100%;
+	margin: auto;
+}
+
+.navbar { 
+	display:inline-block;
+}
+
+.navbar li {
+	list-style: none;
+	display:inline-block;
+	margin:auto;
+}
+
+.navbar li a {
+	text-decoration: none;
+	color:rgb(29, 25, 231);
+	font-size: 18px;
+	padding:8px 20px;
+}
+
+.navbar li a:hover {
+	color:rgb(151, 7, 247);
+	border: darkmagenta;
+	border-radius: 2px;
+	font-size: 20px;
+}
+
+.navbar li a:active {
+	background-color: deepskyblue;
+	border-radius: 5px;
+}
