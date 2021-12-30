@@ -17,7 +17,10 @@ app.post('/refresh', (req, res) => {
     })
 
     spotifyApi.refreshToken().then(data => {
-        console.log(data.body)
+        res.json({
+            accessToken: data.body.accessToken,
+            expiresIn: data.body.expiresIn,
+        }) 
     }).catch(() => {
         res.sendStatus(400);
     })
@@ -34,15 +37,13 @@ app.post('/musices', (req, res) => {
 
     spotifyApi.authorizationCodeGrant(code).then(data => {
         res.json({
-            accessToken: data.body.acess_token,
+            accessToken: data.body.access_token,
             refreshToken: data.body.refresh_token,
             expiresIn: data.body.expires_in,
         })
     })
     .catch(() => {
-        
         console.log(err);
-
         res.sendStatus(400)
     })
 })

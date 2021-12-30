@@ -1,24 +1,27 @@
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import Navbar from "./components/Navbar";
+import Login from './components/Login';
+import Dashboard from './components/Dashboard';
 import Home from "./pages/Home";
 import About from "./pages/About";
 import Musices from "./pages/Musices";
 
+const code = new URLSearchParams(window.location.search).get("code")
+
 
 function App() {
 	return (
-    	<Router>
+		<Router>
       		<Navbar />
-
       		<Switch>
-        		<Route path = '/' exact component = {Home} />
+        		<Route path = '/home' exact component = {Home} />
         		<Route path = '/about' exact component = {About} />
 				<Route path = '/Musices' exact component = {Musices} />
-
       		</Switch>
+    	</Router> 
 
-    	</Router>
-  	);
+	);
+
 }
   
 export default App;
