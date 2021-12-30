@@ -1,9 +1,9 @@
-import './App.css';
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import About from "./pages/About";
-import Player from "./pages/Player";
+import Musices from "./pages/Musices";
+
 
 function App() {
 	return (
@@ -13,7 +13,7 @@ function App() {
       		<Switch>
         		<Route path = '/' exact component = {Home} />
         		<Route path = '/about' exact component = {About} />
-				<Route path = '/player' exact component = {Player} />
+				<Route path = '/Musices' exact component = {Musices} />
 
       		</Switch>
 
