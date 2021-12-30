@@ -1,9 +1,30 @@
 const express = require('express');
+const cors = require("cors");
+const bodyParser = require("body-parser");
 const SpotifyWebApi = require('spotify-web-api-node');
 
 const app = express();
+app.use(cors());
+app.use(bodyParser.json());
 
-app.post('/login', (req, res) => {
+app.post('/refresh', (req, res) => {
+    const refreshToken = req.body.refreshToken;
+    const spotifyApi = new spotifyApi({
+        redirectUri: 'http://localhost:3000',
+        clientID: 'ea3f794914fb41959f063faa7f5d4760',
+        clientSecret: '356f73ead9184670a2702e9b8b544d44',
+        refreshToken,
+    })
+
+    spotifyApi.refreshToken().then(data => {
+        console.log(data.body)
+    }).catch(() => {
+        res.sendStatus(400);
+    })
+
+})
+
+app.post('/musices', (req, res) => {
     const code = req.body.code;
     const spotifyApi = new spotifyApi({
         redirectUri: 'http://localhost:3000',
@@ -19,6 +40,9 @@ app.post('/login', (req, res) => {
         })
     })
     .catch(() => {
+        
+        console.log(err);
+
         res.sendStatus(400)
     })
 })
