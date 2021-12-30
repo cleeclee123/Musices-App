@@ -8,6 +8,7 @@ export default function Dashboard({ code }) {
     return (
         <div className = 'dash-main'>
             <h1> Hello, this is the dashboard </h1>
+            {code}
         </div>
     )
 
