@@ -1,12 +1,9 @@
 import React, { Component } from 'react';
-import Login from '../components/Login';
-import Dashboard from '../components/Dashboard';
 
-
-const code = new URLSearchParams(window.location.search).get("code")
-
-function App() {
-    return code ? <Dashboard code = {code} /> : <Login />
+export default class Muscies extends Component {
+    render() {
+        return (
+            <h1> Musices Page </h1>
+        )
+    }
 }
-
-export default App

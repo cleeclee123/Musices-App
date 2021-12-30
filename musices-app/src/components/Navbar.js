@@ -16,6 +16,7 @@ const Navbar= () =>{
 					<li> <b> <Link to = "/home"> Home </Link> </b> </li>
 					<li> <b> <Link to = "/about"> About </Link> </b> </li>
 					<li> <b> <Link to = "/signin"> Sign In </Link></b> </li>
+					
 					<li> 
 						<a className = "navbar-link" href = "/musices">
 							<button className= "navbar-button"> <b>Lets Get Started</b> </button>
