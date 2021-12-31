@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
@@ -16,7 +16,6 @@ function App() {
         		<Route path = '/home' exact component = {Home} />
         		<Route path = '/about' exact component = {About} />
 				<Route path = '/Musices' exact component = {Musices} />
-				
 				<Route path = '/signin' exact component = {Login} /> {code ? <Dashboard code = {code} /> : <Login />} 
       		</Switch>
     	</Router> 
