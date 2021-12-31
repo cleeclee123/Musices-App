@@ -13,7 +13,6 @@ function App() {
 		<Router>
       		<Navbar />
       		<Switch>
-			{/* <Route exact path = '/'> <Redirect to = '/home' /> </Route> */} 
       			<Route path = '/home' exact component = {Home} />
         		<Route path = '/about' exact component = {About} />
 				<Route path = '/Musices' exact component = {Musices} />
