@@ -40,39 +40,40 @@ export default function Dashboard({ code }) {
 		.then(tokenResponse => {      
 			setToken(tokenResponse.data.access_token);
 
-		axios('https://api.spotify.com/v1/browse/categories?locale=sv_US', {
-			method: 'GET',
-			headers: { 'Authorization' : 'Bearer ' + tokenResponse.data.access_token}
-		})
-		.then (genreResponse => {        
-			setGenres({
-			selectedGenre: genres.selectedGenre,
-			listOfGenresFromAPI: genreResponse.data.categories.items
+			axios('https://api.spotify.com/v1/browse/categories?locale=sv_US', {
+				method: 'GET',
+				headers: { 'Authorization' : 'Bearer ' + tokenResponse.data.access_token}
 			})
-      	});
-      
-   	});
+			.then (genreResponse => {        
+				setGenres({
+				selectedGenre: genres.selectedGenre,
+				listOfGenresFromAPI: genreResponse.data.categories.items
+				})
+			});
+		
+   		});
 
 	}, [genres.selectedGenre, spotify.ClientId, spotify.ClientSecret]); 
 
 	const genreChanged = val => {
-		setGenres({
-		selectedGenre: val, 
-		listOfGenresFromAPI: genres.listOfGenresFromAPI
-	});
+		
+		setGenres ({
+			selectedGenre: val, 
+			listOfGenresFromAPI: genres.listOfGenresFromAPI
+		});
 
-    axios(`https://api.spotify.com/v1/browse/categories/${val}/playlists?limit=10`, {
-		method: 'GET',
-		headers: { 'Authorization' : 'Bearer ' + token}
-    })
-    .then(playlistResponse => {
-		setPlaylist({
-			selectedPlaylist: playlist.selectedPlaylist,
-			listOfPlaylistFromAPI: playlistResponse.data.playlists.items
+		axios(`https://api.spotify.com/v1/browse/categories/${val}/playlists?limit=10`, {
+			method: 'GET',
+			headers: { 'Authorization' : 'Bearer ' + token}
 		})
-    });
+		.then(playlistResponse => {
+			setPlaylist({
+				selectedPlaylist: playlist.selectedPlaylist,
+				listOfPlaylistFromAPI: playlistResponse.data.playlists.items
+			})
+		});
 
-    console.log(val);
+    	console.log(val);
   	}
 
 	const playlistChanged = val => {
@@ -86,21 +87,21 @@ export default function Dashboard({ code }) {
 	const buttonClicked = e => {
 		e.preventDefault();
 
-    axios(`https://api.spotify.com/v1/playlists/${playlist.selectedPlaylist}/tracks?limit=10`, {
-		method: 'GET',
-		headers: {
-        	'Authorization' : 'Bearer ' + token
-      	}
-    })
-    .then(tracksResponse => {
-      	setTracks({
-			selectedTrack: tracks.selectedTrack,
-			listOfTracksFromAPI: tracksResponse.data.items
-     	})
-    });
-  }
+		axios(`https://api.spotify.com/v1/playlists/${playlist.selectedPlaylist}/tracks?limit=10`, {
+			method: 'GET',
+			headers: {
+				'Authorization' : 'Bearer ' + token
+			}
+		})
+		.then(tracksResponse => {
+			setTracks({
+				selectedTrack: tracks.selectedTrack,
+				listOfTracksFromAPI: tracksResponse.data.items
+			})
+		});
+	}
 
-  const listboxClicked = val => {
+  	const listboxClicked = val => {
 
 	const currentTracks = [...tracks.listOfTracksFromAPI];
 
@@ -108,25 +109,25 @@ export default function Dashboard({ code }) {
 
 	setTrackDetail(trackInfo[0].track);
 
-  }
+  	}
 
-  return (
-    <div className="container">
-    	<form onSubmit={buttonClicked}>        
-        	<Dropdown label="Genre :" options={genres.listOfGenresFromAPI} selectedValue={genres.selectedGenre} changed={genreChanged} />
-          	<Dropdown label="Playlist :" options={playlist.listOfPlaylistFromAPI} selectedValue={playlist.selectedPlaylist} changed={playlistChanged} />
+	return (
+		<div className="container">
+			<form onSubmit={buttonClicked}>        
+				<Dropdown label="Genre :" options={genres.listOfGenresFromAPI} selectedValue={genres.selectedGenre} changed={genreChanged} />
+				<Dropdown label="Playlist :" options={playlist.listOfPlaylistFromAPI} selectedValue={playlist.selectedPlaylist} changed={playlistChanged} />
 
-			<div className="col-sm-6 row form-group px-0">
-				<button type='submit' className="btn btn-success col-sm-12">
-					Search
-				</button>
-			</div>
+				<div className="col-sm-6 row form-group px-0">
+					<button type='submit' className="btn btn-success col-sm-12">
+						Search
+					</button>
+				</div>
 
-			<div className="row">
-				<Listbox items={tracks.listOfTracksFromAPI} clicked={listboxClicked} />
-				{trackDetail && <Detail {...trackDetail} /> }
-			</div>        
-      	</form>
-    </div>
-  );
+				<div className="row">
+					<Listbox items={tracks.listOfTracksFromAPI} clicked={listboxClicked} />
+					{trackDetail && <Detail {...trackDetail} /> }
+				</div>        
+			</form>
+		</div>
+  	);
 }
