@@ -112,19 +112,34 @@ export default function Dashboard({ code }) {
   	}
 
 	return (
-		<div className="container">
-			<form onSubmit={buttonClicked}>        
-				<Dropdown label="Genre :" options={genres.listOfGenresFromAPI} selectedValue={genres.selectedGenre} changed={genreChanged} />
-				<Dropdown label="Playlist :" options={playlist.listOfPlaylistFromAPI} selectedValue={playlist.selectedPlaylist} changed={playlistChanged} />
-
-				<div className="col-sm-6 row form-group px-0">
-					<button type='submit' className="btn btn-success col-sm-12">
+		<div className = "main-dash">
+			<form onSubmit = {buttonClicked}> 
+			
+				<div>
+					<Dropdown 
+						className = 'drop-gen-dash' 
+						label = "Genre : " 
+						options = {genres.listOfGenresFromAPI} 
+						selectedValue = {genres.selectedGenre} 
+						changed = {genreChanged} 
+					/>
+					<Dropdown 
+						className = 'drop-playlist-dash' 
+						label = "Playlist : " 
+						options = {playlist.listOfPlaylistFromAPI} 
+						selectedValue = {playlist.selectedPlaylist} 
+						changed = {playlistChanged} 
+					/>
+				</div>
+				
+				<div className = "search-button-dash">
+					<button type = 'submit' className = "button-search-dash">
 						Search
 					</button>
 				</div>
 
-				<div className="row">
-					<Listbox items={tracks.listOfTracksFromAPI} clicked={listboxClicked} />
+				<div className = "row">
+					<Listbox items = {tracks.listOfTracksFromAPI} clicked = {listboxClicked} />
 					{trackDetail && <Detail {...trackDetail} /> }
 				</div>        
 			</form>
