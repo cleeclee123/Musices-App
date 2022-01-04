@@ -1,148 +1,26 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import useAuth from '../useAuth';
-import Creds from './HelperDB/Creds';
-import { Credentials } from './HelperDB/Creds';
-import Detail from './HelperDB/Detail';
-import Dropdown from './HelperDB/Dropdown';
-import Listbox from './HelperDB/Listbox';
-import axios from 'axios';
-
 
 export default function Dashboard({ code }) {
-	const accessToken = useAuth(code)
-	const spotify = Credentials();  
+	const accessToken = useAuth(code);
+	const[search, setSearch] = useState("");
 
-	console.log('RENDERING APP.JS');
-
-	const data = [
-		{value: 1, name: 'A'},
-		{value: 2, name: 'B'},
-		{value: 3, name: 'C'},
-	]; 
-
-	const [token, setToken] = useState('');  
-	const [genres, setGenres] = useState({selectedGenre: '', listOfGenresFromAPI: []});
-	const [playlist, setPlaylist] = useState({selectedPlaylist: '', listOfPlaylistFromAPI: []});
-	const [tracks, setTracks] = useState({selectedTrack: '', listOfTracksFromAPI: []});
-	const [trackDetail, setTrackDetail] = useState(null);
-
-  	useEffect(() => {
-
-		axios('https://accounts.spotify.com/api/token', {
-			headers: {
-				'Content-Type' : 'application/x-www-form-urlencoded',
-				'Authorization' : 'Basic ' + btoa(spotify.ClientId + ':' + spotify.ClientSecret)      
-			},
-			data: 'grant_type=client_credentials',
-			method: 'POST'
-		})
-
-		.then(tokenResponse => {      
-			setToken(tokenResponse.data.access_token);
-
-			axios('https://api.spotify.com/v1/browse/categories?locale=sv_US', {
-				method: 'GET',
-				headers: { 'Authorization' : 'Bearer ' + tokenResponse.data.access_token}
-			})
-			.then (genreResponse => {        
-				setGenres({
-				selectedGenre: genres.selectedGenre,
-				listOfGenresFromAPI: genreResponse.data.categories.items
-				})
-			});
-		
-   		});
-
-	}, [genres.selectedGenre, spotify.ClientId, spotify.ClientSecret]); 
-
-	const genreChanged = val => {
-		
-		setGenres ({
-			selectedGenre: val, 
-			listOfGenresFromAPI: genres.listOfGenresFromAPI
-		});
-
-		axios(`https://api.spotify.com/v1/browse/categories/${val}/playlists?limit=10`, {
-			method: 'GET',
-			headers: { 'Authorization' : 'Bearer ' + token}
-		})
-		.then(playlistResponse => {
-			setPlaylist({
-				selectedPlaylist: playlist.selectedPlaylist,
-				listOfPlaylistFromAPI: playlistResponse.data.playlists.items
-			})
-		});
-
-    	console.log(val);
-  	}
-
-	const playlistChanged = val => {
-		console.log(val);
-		setPlaylist({
-		selectedPlaylist: val,
-		listOfPlaylistFromAPI: playlist.listOfPlaylistFromAPI
-		});
-	}
-
-	const buttonClicked = e => {
-		e.preventDefault();
-
-		axios(`https://api.spotify.com/v1/playlists/${playlist.selectedPlaylist}/tracks?limit=10`, {
-			method: 'GET',
-			headers: {
-				'Authorization' : 'Bearer ' + token
-			}
-		})
-		.then(tracksResponse => {
-			setTracks({
-				selectedTrack: tracks.selectedTrack,
-				listOfTracksFromAPI: tracksResponse.data.items
-			})
-		});
-	}
-
-  	const listboxClicked = val => {
-
-	const currentTracks = [...tracks.listOfTracksFromAPI];
-
-	const trackInfo = currentTracks.filter(t => t.track.id === val);
-
-	setTrackDetail(trackInfo[0].track);
-
-  	}
+	const SearchBar = () => (
+		<form action = "/" method = "get">
+			<label htmlFor="header-search">
+				<span className="visually-hidden">Search blog posts</span>
+			</label>
+			<input
+				type="text"
+				id="header-search"
+				placeholder="Search blog posts"
+				name="s" 
+			/>
+			<button type="submit">Search</button>
+		</form>
+	);
 
 	return (
-		<div className = "main-dash">
-			<form onSubmit = {buttonClicked}> 
-			
-				<div>
-					<Dropdown 
-						className = 'drop-gen-dash' 
-						label = "Genre : " 
-						options = {genres.listOfGenresFromAPI} 
-						selectedValue = {genres.selectedGenre} 
-						changed = {genreChanged} 
-					/>
-					<Dropdown 
-						className = 'drop-playlist-dash' 
-						label = "Playlist : " 
-						options = {playlist.listOfPlaylistFromAPI} 
-						selectedValue = {playlist.selectedPlaylist} 
-						changed = {playlistChanged} 
-					/>
-				</div>
-				
-				<div className = "search-button-dash">
-					<button type = 'submit' className = "button-search-dash">
-						Search
-					</button>
-				</div>
-
-				<div className = "row">
-					<Listbox items = {tracks.listOfTracksFromAPI} clicked = {listboxClicked} />
-					{trackDetail && <Detail {...trackDetail} /> }
-				</div>        
-			</form>
-		</div>
-  	);
+		<SearchBar/>
+	)
 }
