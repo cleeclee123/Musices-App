@@ -21,7 +21,7 @@
 .navbar li a {
 	position: relative;
 	top: 8px;
-	left: 1430px;
+	left: 1480px;
 	color:rgb(27, 142, 236);
 	font-size: 18px;
 	padding: 20px 20px;
@@ -53,7 +53,7 @@
     background-color: #0011ff;
     border: none;
     border-radius: 20px;
-    box-shadow: 0 8px #999;
+    box-shadow: 0 5px #999;
 }
   
 .navbar-button:hover {
