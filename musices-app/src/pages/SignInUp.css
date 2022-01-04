@@ -68,12 +68,13 @@
   font-size: .8em;
   font-weight: 500;
   margin: 10px;
+  border: 1px solid #ffffff;
   cursor: pointer;
 }
 
 .FormField__Button:disabled,
 .FormField__Button[disabled]{
-  border: 1px solid #e70202;
+  border: 1px solid #ffffff;
   background-color: #808080;
   color: #666666;
 }
