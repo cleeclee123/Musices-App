@@ -1,43 +1,91 @@
-import React, { Component } from 'react';
+import React, {useState} from 'react';
 import { Link } from 'react-router-dom';
 import {
     Route,
     NavLink
 } from 'react-router-dom'
 import SignIn from "./SignIn";
+import Submit from "./SignUpTerms";
 import './SignInUp.css';
 
-class SignUp extends Component {
-    constructor() {
-        super();
+class SignUp extends React.Component {
+    constructor(props) {
+        super(props);
 
         this.state = {
-            email: '',
-            password: '',
-            name: '',
-            hasAgreed: false
-        };
-
-        this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
+            fields: {},
+            errors: {},
+            isChecked: true,
+        }
     }
 
-    handleChange(e) {
-        let target = e.target;
-        let value = target.type === 'checkbox' ? target.checked : target.value;
-        let name = target.name;
+    handleCheckbox = () => {
+        const [agree, setAgree] = useState(false);
+        setAgree(!agree);
+    };
+    checkboxNoti = () => {
+        alert("terms agreed to");
+    };
 
-        this.setState({
-          [name]: value
-        });
+    handleValidation() {
+        let fields = this.state.fields;
+        let errors = {};
+        let formIsValid = true;
+
+        // Name
+        if (!fields["name"]) {
+            formIsValid = false;
+            errors["name"] = "Cannot be empty"
+        }
+
+        if (typeof fields["name"] !== "undefined") {
+            if (!fields["name"].match(/^[a-zA-Z]+$/)) {
+                formIsValid = false;
+                errors["name"] = "Only letters";
+            }
+        }
+
+        // Password
+        if (!fields["password"]) {
+            formIsValid = false;
+            errors["password"] = "Cannot be empty";
+        }
+
+        // Email
+        if (!fields["email"]) {
+            formIsValid = false;
+            errors["email"] = "Cannot be empty";
+        }
+
+        if (typeof fields["email"] !== "undefined") {
+            let atPos = fields["email"].lastIndexOf("@");
+            let dotPos = fields["email"].lastIndexOf(".");
+
+            if (!(atPos < dotPos && atPos > 0 && fields["email"].indexOf("@@") === -1 && dotPos > 2 && (fields["email"].length - dotPos) > 2)) {
+                formIsValid = false;
+                errors["email"] = "Email is not valid";
+            }
+        }
+        
+        this.setState({ errors : errors });
+        return formIsValid;
     }
 
-    handleSubmit(e) {
+    contactOnSubmit(e) {
         e.preventDefault();
-
-        console.log('The form was submitted with the following data:');
-        console.log(this.state);
+        if (this.handleValidation()) {
+            alert("Sign Up!");
+        } else {
+            alert("Sign Up Error")
+        }
     }
+
+    handleChange(field, e) {
+        let fields = this.state.fields;
+        fields[field] = e.target.value;
+        this.setState({ fields });
+    }
+
 
     render() {
         return (
@@ -63,40 +111,43 @@ class SignUp extends Component {
                     
 
                         <div className = "FormCenter">
-                            <form onSubmit = {this.handleSubmit} className = "FormFields">
 
-                                <div className = "FormField">
-                                    <label className = "FormField__Label" htmlFor = "name"> Full Name </label>
-                                    <input type = "text" id = "name" className = "FormField__Input" placeholder = "Enter your full name" 
-                                        name = "name" value={this.state.name} onChange={this.handleChange} />
-                                </div>
+                            <form onSubmit = {this.contactOnSubmit.bind(this)} className = "FormFields">
+                                <fieldset>
 
-                                <div className = "FormField">
-                                    <label className = "FormField__Label" htmlFor = "password"> Password </label>
-                                    <input type = "password" id = "password" className = "FormField__Input" placeholder = "Enter your password" 
-                                        name = "password" value = {this.state.password} onChange = {this.handleChange} />
-                                </div>
+                                    <div className = "FormField">
+                                        <label className = "FormField__Label" htmlFor = "name"> Full Name </label>
+                                        <input type = "text" id = "name" className = "FormField__Input" placeholder = "Enter your full name" 
+                                            name = "name" value={this.state.fields["name"]} onChange={this.handleChange.bind(this, "name")} />
+                                    </div>
 
-                                <div className = "FormField">
-                                    <label className = "FormField__Label" htmlFor = "email"> E-Mail Address </label>
-                                    <input type = "email" id = "email" className = "FormField__Input" placeholder = "Enter your email" 
-                                        name = "email" value = {this.state.email} onChange = {this.handleChange} />
-                                </div>
+                                    <div className = "FormField">
+                                        <label className = "FormField__Label" htmlFor = "password"> Password </label>
+                                        <input type = "password" id = "password" className = "FormField__Input" placeholder = "Enter your password" 
+                                            name = "password" value = {this.state.fields["password"]} onChange = {this.handleChange.bind(this, "password")} />
+                                    </div>
 
-                                <div className = "FormField">
-                                    <label className = "FormField__CheckboxLabel">
-                                        <input className = "FormField__Checkbox" type = "checkbox" name = "hasAgreed" value = {this.state.hasAgreed} 
-                                            onChange = {this.handleChange} /> I agree all statements in <a href = "/about" 
-                                            className = "FormField__TermsLink"> terms of service </a>
-                                    </label>
-                                </div>
+                                    <div className = "FormField">
+                                        <label className = "FormField__Label" htmlFor = "email"> E-Mail Address </label>
+                                        <input type = "email" id = "email" className = "FormField__Input" placeholder = "Enter your email" 
+                                            name = "email" value = {this.state.fields["email"]} onChange = {this.handleChange.bind(this, "email")} />
+                                    </div>
+                                    
+                                    <div className = "FormField">
+                                        <input className = "FormField__Checkbox" type = "checkbox" id = "agree" onChange={this.handleCheckbox} /> 
+                                        <label className = "FormField__CheckboxLabel" htmlfor = "agree"> 
+                                            I agree all statements in <a href = "/about" className = "FormField__TermsLink"> terms of service </a> 
+                                        </label>
+                                    </div>
 
-                                <div className = "FormField">
-                                    <Link to = "/spotify">
-                                        <button className = "FormField__Button mr-20"> Sign Up </button> 
-                                    </Link>
-                                    <Link to = "/signin" className = "FormField__Link"> I'm already member </Link>
-                                </div>  
+                                    <div className = "FormField">
+                                        <button className = "FormField__Button mr-20" /* disabled={!this.handleCheckbox} */ onClick={this.checkboxNoti}> Sign Up </button>
+                                        <Link to = "/spotify">
+                                        </Link>
+                                        <Link to = "/signin" className = "FormField__Link"> I'm already member </Link>
+                                    </div>
+                                    
+                                </fieldset>    
                             </form>
                         </div>
                     </div>

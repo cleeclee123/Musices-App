@@ -54,12 +54,12 @@
 }
 
 .FormField__Input::placeholder {
-  color: #616E7F;
+  color: #a7a7a7;
 }
 
 .FormField__Button {
   background-color: #05adca;
-  color: #000000;
+  color: #ffffff;
   border: none;
   outline: none;
   border-radius: 25px;
