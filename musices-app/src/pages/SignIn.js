@@ -79,10 +79,10 @@ class SignIn extends Component {
                                 </div>
 
                                 <div className = "FormField">
-                                    <Link to = "/matches">
+                                    <Link to = "/spotify">
                                         <button className = "FormField__Button mr-20"> Sign In </button> 
                                     </Link>
-                                    <Link to = "/" className = "FormField__Link"> Create an account </Link>
+                                    <Link to = "/signup" className = "FormField__Link"> Create an account </Link>
                                 </div>
                             </form>
                         </div>

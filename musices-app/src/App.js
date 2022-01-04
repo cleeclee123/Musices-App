@@ -4,6 +4,7 @@ import Home from "./pages/Home";
 import About from "./pages/About";
 import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
+import Spotitfy from "./pages/Spotify";
 
 function App() {
 	return (
@@ -14,7 +15,8 @@ function App() {
       			<Route path = '/home' exact component = {Home} />
         		<Route path = '/about' exact component = {About} />
 				<Route path = "/signup" component = {SignUp} />
-                        <Route path = "/signin" component = {SignIn} />
+                <Route path = "/signin" component = {SignIn} />
+				<Route path = "/spotify" component = {Spotitfy} />
       		</Switch>
     	</Router> 
 

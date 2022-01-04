@@ -48,7 +48,6 @@ class SignUp extends Component {
                     </div>
 
                     <div className="Form__Form">
-
                         <div className="PageSwitcher">
                             <NavLink to="/signin" activeClassName="PageSwitcher__Item--Active" className="PageSwitcher__Item">Sign In</NavLink>
                             <NavLink exact to="/signup" activeClassName="PageSwitcher__Item--Active" className="PageSwitcher__Item">Sign Up</NavLink>
@@ -59,7 +58,7 @@ class SignUp extends Component {
                             <NavLink exact to="/signup" activeClassName="FormTitle__Link--Active" className="FormTitle__Link">Sign Up</NavLink>
                         </div>
 
-                             <Route exact path="/signup" component = {SignUp}> </Route>
+                            <Route exact path="/signup" component = {SignUp}> </Route>
                             <Route path="/signin" component = {SignIn}> </Route>
                     
 
@@ -87,16 +86,16 @@ class SignUp extends Component {
                                 <div className = "FormField">
                                     <label className = "FormField__CheckboxLabel">
                                         <input className = "FormField__Checkbox" type = "checkbox" name = "hasAgreed" value = {this.state.hasAgreed} 
-                                            onChange = {this.handleChange} /> I agree all statements in <a href = "" 
+                                            onChange = {this.handleChange} /> I agree all statements in <a href = "/about" 
                                             className = "FormField__TermsLink"> terms of service </a>
                                     </label>
                                 </div>
 
                                 <div className = "FormField">
-                                    <Link to = "/prequestionnaire">
+                                    <Link to = "/spotify">
                                         <button className = "FormField__Button mr-20"> Sign Up </button> 
                                     </Link>
-                                    <Link to = "/sign-in" className = "FormField__Link"> I'm already member </Link>
+                                    <Link to = "/signin" className = "FormField__Link"> I'm already member </Link>
                                 </div>  
                             </form>
                         </div>
