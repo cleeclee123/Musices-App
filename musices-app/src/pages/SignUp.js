@@ -8,84 +8,35 @@ import SignIn from "./SignIn";
 import Submit from "./SignUpTerms";
 import './SignInUp.css';
 
-class SignUp extends React.Component {
-    constructor(props) {
-        super(props);
+export default function SignUp() {
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [agree, setAgree] = useState(false);
 
-        this.state = {
-            fields: {},
-            errors: {},
-            isChecked: true,
+    const onChangeHandler = (fieldName, value) => {
+        if (fieldName === "name") {
+            setName(value);
+        } else if (fieldName === "email") {
+            setName(value);
         }
     }
-
-    handleCheckbox = () => {
-        const [agree, setAgree] = useState(false);
+    const checkboxHandler = () => {
         setAgree(!agree);
-    };
-    checkboxNoti = () => {
-        alert("terms agreed to");
-    };
-
-    handleValidation() {
-        let fields = this.state.fields;
-        let errors = {};
-        let formIsValid = true;
-
-        // Name
-        if (!fields["name"]) {
-            formIsValid = false;
-            errors["name"] = "Cannot be empty"
-        }
-
-        if (typeof fields["name"] !== "undefined") {
-            if (!fields["name"].match(/^[a-zA-Z]+$/)) {
-                formIsValid = false;
-                errors["name"] = "Only letters";
-            }
-        }
-
-        // Password
-        if (!fields["password"]) {
-            formIsValid = false;
-            errors["password"] = "Cannot be empty";
-        }
-
-        // Email
-        if (!fields["email"]) {
-            formIsValid = false;
-            errors["email"] = "Cannot be empty";
-        }
-
-        if (typeof fields["email"] !== "undefined") {
-            let atPos = fields["email"].lastIndexOf("@");
-            let dotPos = fields["email"].lastIndexOf(".");
-
-            if (!(atPos < dotPos && atPos > 0 && fields["email"].indexOf("@@") === -1 && dotPos > 2 && (fields["email"].length - dotPos) > 2)) {
-                formIsValid = false;
-                errors["email"] = "Email is not valid";
-            }
-        }
-        
-        this.setState({ errors : errors });
-        return formIsValid;
     }
 
-    contactOnSubmit(e) {
-        e.preventDefault();
-        if (this.handleValidation()) {
-            alert("Sign Up!");
+    const onSubmitHandler = (event) => {
+        event.preventDefault();
+        if (name.trim() === "" || email.trim() === "") {
+            alert("Require both fields");
         } else {
-            alert("Sign Up Error")
+            alert(name + " " + email);
+            setName("");
+            setEmail("");
         }
     }
-
-    handleChange(field, e) {
-        let fields = this.state.fields;
-        fields[field] = e.target.value;
-        this.setState({ fields });
+    const btnHandler = () => {
+        alert("Submitted");
     }
-
 
     render() {
         return (
@@ -156,5 +107,3 @@ class SignUp extends React.Component {
         );
     }
 }
-
-export default SignUp;
