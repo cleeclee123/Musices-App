@@ -1,5 +1,6 @@
 /* #e213ae
  */
+
 .FormCenter {
   margin-bottom: 100px;
 }
@@ -67,6 +68,14 @@
   font-size: .8em;
   font-weight: 500;
   margin: 10px;
+  cursor: pointer;
+}
+
+.FormField__Button:disabled,
+.FormField__Button[disabled]{
+  border: 1px solid #e70202;
+  background-color: #808080;
+  color: #666666;
 }
 
 .FormField__Link {
@@ -78,7 +87,7 @@
 }
 
 .FormField__CheckboxLabel {
-  color: #646F7D;
+  color: #ffffff;
   font-size: .9em;
 }
 
