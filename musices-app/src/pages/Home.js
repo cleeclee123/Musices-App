@@ -8,7 +8,7 @@ export default class Home extends Component {
                 <h1> Press Let's Get Started to create a Musices Account </h1>
                 
                 <div className = 'start-main'>
-                    <a className = "main-link" href = "/musices">
+                    <a className = "main-link" href = "/signup">
                         <button className = "main-button"> <b> Lets Get Started </b> </button>
                     </a> 
                 </div>

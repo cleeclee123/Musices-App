@@ -1,15 +1,17 @@
+/* #e213ae
+ */
 .FormCenter {
   margin-bottom: 100px;
 }
 
 .FormTitle {
-  color: #707C8B;
+  color: #000000;
   font-weight: 300;
   margin-bottom: 50px;
 }
 
 .FormTitle__Link {
-  color: #707C8B;
+  color: #acacac;
   text-decoration: none;
   display: inline-block;
   font-size: 1.7em;
@@ -22,8 +24,10 @@
 }
 
 .FormTitle__Link--Active {
-  color: white;
-  border-bottom: 1px solid #BFF0D4;
+  color: #ffffff;
+  background-color: #05adca;
+  border-radius: 15px;
+  padding: 5px;
 }
 
 .FormField {
@@ -34,7 +38,7 @@
   display: block;
   text-transform: uppercase;
   font-size: .9em;
-  color: white;
+  color: rgb(255, 255, 255);
 }
 .FormField__Input {
   width: 85%;
@@ -42,7 +46,7 @@
   border: none;
   color: white;
   outline: none;
-  border-bottom: 1px solid #BFF0D4;
+  border-bottom: 1px solid #000000;
   font-size: 1em;
   font-weight: 300;
   padding-bottom: 10px;
@@ -54,21 +58,22 @@
 }
 
 .FormField__Button {
-  background-color: #BFF0D4;
-  color: #616E7F;
+  background-color: #05adca;
+  color: #000000;
   border: none;
   outline: none;
   border-radius: 25px;
   padding: 15px 70px;
   font-size: .8em;
   font-weight: 500;
+  margin: 10px;
 }
 
 .FormField__Link {
-  color: #66707D;
+  color: #ffffff;
   text-decoration: none;
   display: inline-block;
-  border-bottom: 1.5px solid #225E62;
+  border-bottom: 1.5px solid #05adca;
   padding-bottom: 5px;
 }
 
@@ -103,12 +108,12 @@ Login/Form Core
 
 .Form__Aside {
   width: 50%;
-  background-color: #fdfdf1;;    
+  background-color: #ffffff;;    
 }
 
 .Form__Form {
   width: 50%;
-  background-color: #B0A1BA;;
+  background-color: #7e7e7e;;
   padding: 25px 40px;
   overflow: auto;
 }
@@ -120,7 +125,7 @@ Login/Form Core
 }
 
 .PageSwitcher__Item {
-  background-color: #4C5D72;
+  background-color: #4f565f;
   color: #9DA6B1;
   padding: 10px 25px;
   cursor: pointer;
@@ -132,7 +137,7 @@ Login/Form Core
 }
 
 .PageSwitcher__Item--Active {
-  background-color: #5ED0C0;
+  background-color: #05adca;
   color: white;
 }
 
