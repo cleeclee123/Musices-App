@@ -52,8 +52,8 @@
     color: #fff;
     background-color: #0011ff;
     border: none;
-    border-radius: 15px;
-    box-shadow: 0 9px #999;
+    border-radius: 20px;
+    box-shadow: 0 8px #999;
 }
   
 .navbar-button:hover {

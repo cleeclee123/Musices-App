@@ -1,9 +1,18 @@
 import React, { Component } from 'react';
+import './Home.css';
 
 export default class Home extends Component {
     render() {
         return (
-            <h1> Home Page </h1>
+            <div className = 'home-main'> 
+                <h1> Press Let's Get Started to create a Musices Account </h1>
+                
+                <div className = 'start-main'>
+                    <a className = "main-link" href = "/musices">
+                        <button className = "main-button"> <b> Lets Get Started </b> </button>
+                    </a> 
+                </div>
+            </div>
         )
     }
 }

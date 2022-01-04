@@ -1,0 +1,38 @@
+.home-main {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.start-main {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, 50%);
+}
+
+.main-button {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 20px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    outline: none;
+    color: #fff;
+    background-color: #0011ff;
+    border: none;
+    border-radius: 20px;
+    box-shadow: 0 8px #999;
+}
+  
+.main-button:hover {
+    background-color: #0a34bd
+}
+  
+.main-button:active {
+    background-color: #2d5bf5;
+    box-shadow: 0 4px #666;
+    transform: translateY(4px);
+}
