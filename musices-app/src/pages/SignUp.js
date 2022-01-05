@@ -1,4 +1,4 @@
-import React, {Component, useState} from 'react';
+import React, {Component, useState, useContext} from 'react';
 import { Link } from 'react-router-dom';
 import {
     Route,
@@ -7,12 +7,15 @@ import {
 import SignIn from "./SignIn";
 import Submit from "./SignUpTerms";
 import './SignInUp.css';
+import { FirebaseContext } from "../../src/firebase/Context";
 
 const SignUp = () => {
     const [name, setName] = useState("");
     const [password, setPassword] = useState("");
     const [email, setEmail] = useState("");
     const [agree, setAgree] = useState(false);
+
+    const { firebase } = useContext(FirebaseContext);
 
     const onChangeHandler = (fieldName, value) => {
         if (fieldName === 'name') {
@@ -28,7 +31,7 @@ const SignUp = () => {
         if (name.trim() === "" || password.trim() === "" || email.trim() === "") {
             alert("Require all fields");
         } else {
-            alert(name + " " + email);
+            alert(name + " " + email + " " + password);
             setName("");
             setEmail("");
         }
@@ -64,7 +67,15 @@ const SignUp = () => {
 
                     <div className = "FormCenter">
 
-                        <form onSubmit = {(event) => {onSubmitHandler(event)}}>
+                        <form onSubmit = {(event) => {
+                            onSubmitHandler(event);
+                            firebase
+                                .auth()
+                                .createUserWithEmailAndPassword(email, password)
+                                .then(() => alert("signed up"))
+                                .catch((error) => alert(error.message));
+                        }}>
+
                             <fieldset>
 
                                 <div className = "FormField">
@@ -94,7 +105,7 @@ const SignUp = () => {
 
                                 <div className = "FormField">
                                     <Link to = "/spotify">
-                                        <button className = "FormField__Button mr-20" disabled = {!agree} onClick = {btnHandler} > Sign Up </button>
+                                        <button type = "submit" className = "FormField__Button mr-20" disabled = {!agree} /* onClick = {btnHandler} */ > Sign Up </button>
                                     </Link>
                                     <Link to = "/signin" className = "FormField__Link"> I'm already member </Link>
                                 </div>

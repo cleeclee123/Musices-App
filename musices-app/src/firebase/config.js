@@ -1,5 +1,5 @@
 import * as firebase from "firebase/app"
-import auth from 'firebase/auth';
+import 'firebase/auth';
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 
