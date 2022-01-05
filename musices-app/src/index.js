@@ -3,12 +3,12 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './tests/reportWebVitals';
-import { app } from './firebase/config';
+import AppFire from './firebase/config';
 import { FirebaseContext } from './firebase/Context';
 
 ReactDOM.render(
   <React.StrictMode>
-    <FirebaseContext.Provider value = {{ app }}>
+    <FirebaseContext.Provider value = {{ AppFire }}>
       <App />
     </FirebaseContext.Provider>
   </React.StrictMode>,
