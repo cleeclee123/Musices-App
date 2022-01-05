@@ -1,26 +1,23 @@
-import React, {Component, useState, useContext} from 'react';
-import { Link } from 'react-router-dom';
-import {
-    Route,
-    NavLink
-} from 'react-router-dom'
+import React, { useState, /* useContext */ useCallback } from 'react';
+import { Route, NavLink, Link } from 'react-router-dom'
+import { withRouter } from "react-router";
 import SignIn from "./SignIn";
-import Submit from "./SignUpTerms";
 import './SignInUp.css';
-import { FirebaseContext } from "../../src/firebase/Context";
+import app from '../../firebase/config';
+// import { FirebaseContext } from "../../src/firebase/Context";
 
-const SignUp = () => {
+const SignUp = ({ history }) => {
     const [name, setName] = useState("");
     const [password, setPassword] = useState("");
     const [email, setEmail] = useState("");
     const [agree, setAgree] = useState(false);
 
-    const { firebase } = useContext(FirebaseContext);
+    // const { firebase } = useContext(FirebaseContext);
 
     const onChangeHandler = (fieldName, value) => {
         if (fieldName === 'name') {
             setName(value);
-        } else if (fieldName == 'password') {
+        } else if (fieldName === 'password') {
             setPassword(value);
         } else if (fieldName === 'email') {
             setEmail(value);
@@ -43,6 +40,7 @@ const SignUp = () => {
         alert("Submitted");
     }
 
+ 
     return (
         <div>
             <div className="Form">
@@ -67,15 +65,7 @@ const SignUp = () => {
 
                     <div className = "FormCenter">
 
-                        <form onSubmit = {(event) => {
-                            onSubmitHandler(event);
-                            firebase
-                                .auth()
-                                .createUserWithEmailAndPassword(email, password)
-                                .then(() => alert("signed up"))
-                                .catch((error) => alert(error.message));
-                        }}>
-
+                        <form onSubmit = {(event) => onSubmitHandler(event), {}}>
                             <fieldset>
 
                                 <div className = "FormField">
@@ -105,8 +95,9 @@ const SignUp = () => {
 
                                 <div className = "FormField">
                                     <Link to = "/spotify">
-                                        <button type = "submit" className = "FormField__Button mr-20" disabled = {!agree} /* onClick = {btnHandler} */ > Sign Up </button>
+                                        <button type = "submit" className = "FormField__Button mr-20" disabled = {!agree} /* onClick = {signUp} */ > Sign Up </button>
                                     </Link>
+                                    
                                     <Link to = "/signin" className = "FormField__Link"> I'm already member </Link>
                                 </div>
                                 
@@ -119,5 +110,5 @@ const SignUp = () => {
     );
 }
 
-export default SignUp;
+export default withRouter(SignUp);
 
