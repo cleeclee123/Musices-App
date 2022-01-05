@@ -5,9 +5,12 @@ import About from "./pages/About";
 import SignUp from "./pages/SignUpIn/SignUp";
 import SignIn from "./pages/SignUpIn/SignIn";
 import Spotify from "./pages/Spotify";
+import Auth from "./pages/SignUpIn/Auth";
+import { useUserContext } from "./firebase/Context";
 
 
 function App() {
+	const { user, loading, error } = useUserContext();
 	return (
 			<Router>
 				<Navbar />
@@ -18,6 +21,12 @@ function App() {
 					<Route path = "/signup" component = {SignUp} />
 					<Route path = "/signin" component = {SignIn} />
 				</Switch>
+				
+				<div className="App">
+					{error && <p className="error">{error}</p>}
+					{loading ? <h2>Loading...</h2> : <> {user ? <Spotify /> : <Auth />} </>}
+    			</div>
+
 			</Router> 
 		
 	);

@@ -10,12 +10,12 @@ const Auth = () => {
     
     return (
         <div className="container">
-            {!index ? <Signin /> : <Signup />}
+            {!index ? <SignIn /> : <SignUp />}
             <p onClick = {toggleIndex}>
                 {!index ? "New user? Click here " : "Already have an acount?"}
             </p>
         </div>
-      );
-    
-    export default Auth;
+    );
 };
+
+export default Auth;
