@@ -1,30 +1,21 @@
-import React, { useEffect, useState } from "react";
-import app from '../../firebase/config';
+import React, { useState } from "react";
+import SignIn from "./SignIn";
+import SignUp from "./SignUp";
 
-export const AuthContext = React.createContext();
-
-export const AuthProvider = ({ children }) => {
-    const [currentUser, setCurrentUser] = useState(null);
-    const [pending, setPending] = useState(true);
-
-    useEffect(() => {
-        app.auth().onAuthStateChanged((user) => {
-            setCurrentUser(user)
-            setPending(false)
-        });
-    }, []);
-
-    if (pending) {
-        return <div className = "pending-auth"> Loading </div>
-    }
-
+const Auth = () => {
+    const [index, setIndex] = useState(false);
+    const toggleIndex = () => {
+        setIndex((prevState) => !prevState);
+    };
+    
     return (
-        <AuthContext.Provider
-            value = {{
-                currentUser
-            }}
-        >
-            {children}
-        </AuthContext.Provider>
-    );
+        <div className="container">
+            {!index ? <Signin /> : <Signup />}
+            <p onClick = {toggleIndex}>
+                {!index ? "New user? Click here " : "Already have an acount?"}
+            </p>
+        </div>
+      );
+    
+    export default Auth;
 };

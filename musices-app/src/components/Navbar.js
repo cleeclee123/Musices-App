@@ -15,6 +15,8 @@ const Navbar= () =>{
 				<ul class = "navbar">
 					<li> <b> <Link to = "/home"> Home </Link> </b> </li>
 					<li> <b> <Link to = "/about"> About </Link> </b> </li>
+					<li> <b> <Link to = "/signup"> Sign Up </Link> </b> </li>
+					<li> <b> <Link to = "/signin"> Sign In </Link> </b> </li>
 					{/* <li> <b> <Link to = "/signin"> Sign In </Link></b> </li> */}
 
 					<li> 

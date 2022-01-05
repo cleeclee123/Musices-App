@@ -3,14 +3,13 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './tests/reportWebVitals';
-import AppFire from './firebase/config';
-import { FirebaseContext } from './firebase/Context';
+import { UserContext } from './firebase/Context';
 
 ReactDOM.render(
   <React.StrictMode>
-    <FirebaseContext.Provider value = {{ AppFire }}>
+    <UserContext.Provider>
       <App />
-    </FirebaseContext.Provider>
+    </UserContext.Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );

@@ -5,13 +5,10 @@ import About from "./pages/About";
 import SignUp from "./pages/SignUpIn/SignUp";
 import SignIn from "./pages/SignUpIn/SignIn";
 import Spotify from "./pages/Spotify";
-import { AuthProvider } from "./pages/SignUpIn/Auth";
-import PrivateRoute from "./pages/PrivateRoute";
 
 
 function App() {
 	return (
-		
 			<Router>
 				<Navbar />
 				<Switch>
@@ -20,7 +17,6 @@ function App() {
 					<Route path = '/about' exact component = {About} />
 					<Route path = "/signup" component = {SignUp} />
 					<Route path = "/signin" component = {SignIn} />
-					<PrivateRoute exact path = "/spotify" component = {Spotify} />
 				</Switch>
 			</Router> 
 		
