@@ -2,15 +2,11 @@ import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-d
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import About from "./pages/About";
-import SignUp from "./pages/SignUpIn/SignUp";
-import SignIn from "./pages/SignUpIn/SignIn";
-import Spotify from "./pages/Spotify";
-import Auth from "./pages/SignUpIn/Auth";
-import { useUserContext } from "./firebase/Context";
+import SignUp from "./pages/SignUp";
+import SignIn from "./pages/SignIn";
 
 
-function App() {
-	const { user, loading, error } = useUserContext();
+const App = () => {
 	return (
 			<Router>
 				<Navbar />
@@ -21,12 +17,6 @@ function App() {
 					<Route path = "/signup" component = {SignUp} />
 					<Route path = "/signin" component = {SignIn} />
 				</Switch>
-				
-				<div className="App">
-					{error && <p className="error">{error}</p>}
-					{loading ? <h2>Loading...</h2> : <> {user ? <Spotify /> : <Auth />} </>}
-    			</div>
-
 			</Router> 
 		
 	);
