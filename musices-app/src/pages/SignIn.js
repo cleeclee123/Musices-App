@@ -1,10 +1,50 @@
-import React, {  } from 'react';
-import { Link, Route, NavLink } from 'react-router-dom';
+import React, { useState } from "react";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth, db } from "../firebase/config";
+import { updateDoc, doc } from "firebase/firestore";
+import { Link, Route, NavLink, useHistory } from 'react-router-dom';
 import SignUp from "./SignUp";
 import './SignUpIn.css';
 
-
 const SignIn = () => {
+    const [data, setData] = useState({
+        email: "",
+        password: "",
+        error: null,
+        loading: false,
+    });
+
+    // const history = useHistory();
+
+    const { email, password, error, loading } = data;
+
+    const handleChange = (e) => {
+        setData({ ...data, [e.target.name]: e.target.value });
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setData({ ...data, error: null, loading: true });
+        if (!email || !password) {
+            setData({ ...data, error: "All fields are required" });
+        }
+        try {
+            const result = await signInWithEmailAndPassword(auth, email, password);
+
+            await updateDoc(doc(db, "users", result.user.uid), {
+                isOnline: true,
+            });
+            setData({
+                email: "",
+                password: "",
+                error: null,
+                loading: false,
+            });
+            //history.replace("/");
+        } catch (err) {
+            setData({ ...data, error: err.message, loading: false });
+        }
+    };
 
     return (
         <div>       
@@ -31,28 +71,47 @@ const SignIn = () => {
                 
         
                     <div className = "FormCenter">
-                        <form /* onSubmit = {onSubmit} */ className = "FormFields" >
-                            <fieldset>
-                                <div className = "FormField">
-                                    <label className = "FormField__Label" htmlFor = "email"> E-Mail Address </label>
-                                    <input type = "email" id = "email" className = "FormField__Input" placeholder = "Enter your email" 
-                                        name = "email" /* ref = {emailRef} */ />
-                                </div>
+                        <section> 
+                            <form className = "FormFields" >
+                                <fieldset>
+                                    <div className = "FormField">
+                                        <label className = "FormField__Label" htmlFor = "email"> E-Mail Address </label>
+                                        <input 
+                                            className = "FormField__Input" 
+                                            type = "text"
+                                            name = "email" 
+                                            id = "email" 
+                                            placeholder = "Enter your email" 
+                                            value = {email}
+                                            onChange = {handleChange}
+                                        />
+                                    </div>
 
-                                <div className = "FormField">
-                                    <label className = "FormField__Label" htmlFor = "password"> Password </label>
-                                    <input type = "password" id = "password" className = "FormField__Input" placeholder = "Enter your password" name = "password" 
-                                        /* ref = {passwordRef} */ />
-                                </div>
+                                    <div className = "FormField">
+                                        <label className = "FormField__Label" htmlFor = "password"> Password </label>
+                                        <input 
+                                            className = "FormField__Input"
+                                            type = "password" 
+                                            name = "password"
+                                            id = "password" 
+                                            placeholder = "Enter your password" 
+                                            value = {password}
+                                            onChange = {handleChange} />
+                                    </div>
 
-                                <div className = "FormField">
-                                    <Link to = "/spotify">
-                                        <button type = "submit" className = "FormField__Button mr-20" > Sign In </button> 
-                                    </Link>
-                                    <Link to = "/signup" className = "FormField__Link"> Create an account </Link> 
-                                </div>
-                            </fieldset>
-                        </form>
+                                    {error ? <p className = "error"> {error} </p> : null}
+
+                                    <div className = "FormField">
+
+                                        <button className = "FormField__Button mr-20"  type = "submit" disabled = {loading}> 
+                                            {loading ? "Logging in ..." : "Sign In"}                                        
+                                        </button> 
+           
+                                        <Link to = "/signup" className = "FormField__Link"> Create an account </Link> 
+                                    </div>
+                                </fieldset>
+                            </form>
+                        </section>
                     </div>
                 </div>    
             </div>    

@@ -1,9 +1,64 @@
-import React, { } from 'react';
-import { Route, Link, NavLink } from 'react-router-dom'
+import React, { useState } from "react";
+import { Route, Link, NavLink, useHistory } from 'react-router-dom'
 import SignIn from "./SignIn";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth, db } from "../firebase/config";
+import { setDoc, doc, Timestamp } from "firebase/firestore";
 import './SignUpIn.css';
 
 const SignUp = () => {
+    const [data, setData] = useState({
+        name: "",
+        email: "",
+        password: "",
+        error: null,
+        loading: false,
+    });
+
+    const [agree, setAgree] = useState(false);
+    const checkboxHandler = () => {
+        setAgree(!agree);
+    }
+    
+    //const history = useHistory();
+    
+    const { name, email, password, error, loading } = data;
+    
+    const handleChange = (e) => {
+        setData({ ...data, [e.target.name]: e.target.value });
+    };
+    
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setData({ ...data, error: null, loading: true });
+        if (!name || !email || !password) {
+            setData({ ...data, error: "All fields are required" });
+        }
+        try {
+            const result = await createUserWithEmailAndPassword(
+                auth,
+                email,
+                password
+            );
+            await setDoc(doc(db, "users", result.user.uid), {
+                uid: result.user.uid,
+                name,
+                email,
+                createdAt: Timestamp.fromDate(new Date()),
+                isOnline: true,
+            });
+            setData({
+                name: "",
+                email: "",
+                password: "",
+                error: null,
+                loading: false,
+            });
+            //history.replace("/");
+        } catch (err) {
+            setData({ ...data, error: err.message, loading: false });
+        }
+    };
 
     return (
         <div>
@@ -28,45 +83,74 @@ const SignUp = () => {
                 
 
                     <div className = "FormCenter">
+                        <section>
+                            <form >
+                                <fieldset>
+                                    <div className = "FormField">
+                                        <label className = "FormField__Label" htmlFor = "name"> Full Name </label>
+                                        <input 
+                                            className = "FormField__Input"
+                                            type = "text"   
+                                            name = "name"
+                                            id = "name"
+                                            placeholder = "Enter your full name" 
+                                            value = {name}
+                                            onChange = {handleChange}
+                                        />
+                                    </div>
 
-                        <form >
-                            <fieldset>
+                                    <div className = "FormField">
+                                        <label className = "FormField__Label" htmlFor = "password"> Password </label>
+                                        <input 
+                                            className = "FormField__Input" 
+                                            type = "password" 
+                                            name = "password"
+                                            id = "password" 
+                                            placeholder = "Enter your password"
+                                            value = {password}
+                                            onChange = {handleChange} 
+                                        />
+                                    </div>
 
-                                <div className = "FormField">
-                                    <label className = "FormField__Label" htmlFor = "name"> Full Name </label>
-                                    <input type = "text" id = "name" className = "FormField__Input" placeholder = "Enter your full name" 
-                                        name = "name"  />
-                                </div>
-
-                                <div className = "FormField">
-                                    <label className = "FormField__Label" htmlFor = "password"> Password </label>
-                                    <input type = "password" id = "password" className = "FormField__Input" placeholder = "Enter your password" 
-                                        name = "password" />
-                                </div>
-
-                                <div className = "FormField">
-                                    <label className = "FormField__Label" htmlFor = "email"> E-Mail Address </label>
-                                    <input type = "email" id = "email" className = "FormField__Input" placeholder = "Enter your email" 
-                                        name = "email" />
-                                </div>
-                                
-                                <div className = "FormField">
-                                    <input className = "FormField__Checkbox" type = "checkbox" id = "agree"  /> 
-                                    <label className = "FormField__CheckboxLabel" htmlfor = "agree"> 
-                                        I agree all statements in <a href = "/about" className = "FormField__TermsLink"> terms of service </a> 
-                                    </label>
-                                </div>
-
-                                <div className = "FormField">
-                                    <Link to = "/spotify">
-                                        <button type = "submit" className = "FormField__Button mr-20" > Sign Up </button>
-                                    </Link>
+                                    <div className = "FormField">
+                                        <label className = "FormField__Label" htmlFor = "email"> E-Mail Address </label>
+                                        <input 
+                                            className = "FormField__Input" 
+                                            type = "email" 
+                                            name = "email"
+                                            id = "email" 
+                                            placeholder = "Enter your email" 
+                                            value = {email}
+                                            onChange = {handleChange}
+                                        />
+                                    </div>
                                     
-                                    <Link to = "/signin" className = "FormField__Link"> I'm already member </Link>
-                                </div>
+                                    <div className = "FormField">
+                                        <input 
+                                            className = "FormField__Checkbox" 
+                                            type = "checkbox" 
+                                            name = "agree"
+                                            id = "agree"  
+                                            onChange = {checkboxHandler}    
+                                        /> 
+                                        <label className = "FormField__CheckboxLabel" htmlfor = "agree"> 
+                                            I agree all statements in <a href = "/about" className = "FormField__TermsLink"> terms of service </a> 
+                                        </label>
+                                    </div>
+
+                                    {error ? <p className = "error"> {error} </p> : null}
+
+                                    <div className = "FormField">
+                                        <button className = "FormField__Button mr-20" type = "submit" disabled = {loading && !agree} > 
+                                            {loading ? "Creating ..." : "Sign Up"}
+                                        </button>
                                 
-                            </fieldset>    
-                        </form>
+                                        <Link to = "/signin" className = "FormField__Link"> I'm already member </Link>
+                                    </div>
+                                    
+                                </fieldset>    
+                            </form>
+                        </section>
                     </div>
                 </div>
             </div>
