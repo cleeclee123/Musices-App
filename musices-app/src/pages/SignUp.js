@@ -4,6 +4,7 @@ import SignIn from "./SignIn";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "../firebase/config";
 import { setDoc, doc, Timestamp } from "firebase/firestore";
+import Dashboard from './Dashboard';
 import './SignUpIn.css';
 
 const SignUp = () => {
@@ -20,7 +21,7 @@ const SignUp = () => {
         setAgree(!agree);
     }
     
-    //const history = useHistory();
+    // const history = useHistory();
     
     const { name, email, password, error, loading } = data;
     
@@ -142,7 +143,7 @@ const SignUp = () => {
 
                                     <div className = "FormField">
                                         <button className = "FormField__Button mr-20" type = "submit" disabled = {!agree} > 
-                                            {loading ? "Creating ..." : "Sign Up"}
+                                            {loading ? "Creating..." : "Sign Up"}
                                         </button>
                                 
                                         <Link to = "/signin" className = "FormField__Link"> I'm already member </Link>
