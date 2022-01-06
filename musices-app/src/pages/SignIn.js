@@ -72,7 +72,7 @@ const SignIn = () => {
         
                     <div className = "FormCenter">
                         <section> 
-                            <form className = "FormFields" >
+                            <form className = "FormFields" onSubmit = {handleSubmit}>
                                 <fieldset>
                                     <div className = "FormField">
                                         <label className = "FormField__Label" htmlFor = "email"> E-Mail Address </label>

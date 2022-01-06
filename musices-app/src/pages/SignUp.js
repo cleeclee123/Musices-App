@@ -84,7 +84,7 @@ const SignUp = () => {
 
                     <div className = "FormCenter">
                         <section>
-                            <form >
+                            <form className = "FormFields" onSubmit = {handleSubmit}>
                                 <fieldset>
                                     <div className = "FormField">
                                         <label className = "FormField__Label" htmlFor = "name"> Full Name </label>
@@ -141,7 +141,7 @@ const SignUp = () => {
                                     {error ? <p className = "error"> {error} </p> : null}
 
                                     <div className = "FormField">
-                                        <button className = "FormField__Button mr-20" type = "submit" disabled = {loading && !agree} > 
+                                        <button className = "FormField__Button mr-20" type = "submit" disabled = {!agree} > 
                                             {loading ? "Creating ..." : "Sign Up"}
                                         </button>
                                 
