@@ -16,7 +16,7 @@ const AuthenticatedRoute = ({ component: C, ...props }) => {
 		<Route
 			{...props}
 			render={routeProps =>
-				isAuthenticated ? <C {...routeProps} /> : <Redirect to="/signin" />
+				isAuthenticated ? <C {...routeProps} /> : <Redirect to = "/signin" />
 			}
 	  	/>
 	)
@@ -30,7 +30,7 @@ const UnauthenticatedRoute = ({ component: C, ...props }) => {
 		<Route
 			{...props}
 			render={routeProps =>
-		  		!isAuthenticated ? <C {...routeProps} /> : <Redirect to="/dashboard" />
+		  		!isAuthenticated ? <C {...routeProps} /> : <Redirect to = "/dashboard" />
 			}
 	  	/>
 	)
