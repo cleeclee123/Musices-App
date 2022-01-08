@@ -1,14 +1,16 @@
 import React, { Component } from 'react';
-import { useAuthContext } from '../context/auth';
+import { getAuth, signOut } from 'firebase/auth'
+import { useAuthState } from '../firebase/config'
 import './Dashboard.css';
 
 const Dashboard = () => {
+    const { user } = useAuthState();
+
     return ( 
         <div className = 'dashboard-main'> 
             <h1> Hello, you are now signed in </h1>
-            <h2> Name: </h2>
-            <h2> Email: </h2>
-            <button> Log out </button> 
+            <h1>Welcome {user?.email} </h1> 
+            <button onClick={() => signOut(getAuth())}>Sign out</button>
             
         </div>
     )   
