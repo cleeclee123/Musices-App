@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { } from 'react';
 import { getAuth, signOut } from 'firebase/auth'
 import { useAuthState } from '../firebase/config'
 import './Dashboard.css';

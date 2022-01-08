@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import { Route, Link, NavLink, useHistory } from 'react-router-dom'
+import { Route, Link, NavLink, } from 'react-router-dom'
 import SignIn from "./SignIn";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "../firebase/config";
 import { setDoc, doc, Timestamp } from "firebase/firestore";
-import Dashboard from './Dashboard';
 import './SignUpIn.css';
 
 const SignUp = () => {
