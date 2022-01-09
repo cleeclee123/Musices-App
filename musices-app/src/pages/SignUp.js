@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Route, Link, NavLink, } from 'react-router-dom'
 import SignIn from "./SignIn";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth, db } from "../firebase/config";
 import { setDoc, doc, Timestamp } from "firebase/firestore";
 import './SignUpIn.css';
@@ -40,12 +40,12 @@ const SignUp = () => {
                 email,
                 password
             );
+            const updated = await updateProfile(auth.currentUser, { displayName: name });
             await setDoc(doc(db, "users", result.user.uid), {
                 uid: result.user.uid,
-                name,
+                name, /* updated.user.name */
                 email,
                 createdAt: Timestamp.fromDate(new Date()),
-                isOnline: true,
             });
             setData({
                 name: "",

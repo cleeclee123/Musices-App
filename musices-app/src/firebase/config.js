@@ -1,9 +1,9 @@
-// import * as firebase from "firebase/app"
 import { initializeApp } from "firebase/app";
 import { getAuth, onAuthStateChanged  } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
+import { getFirestore } from "@firebase/firestore";
 import { getStorage } from "firebase/storage";
-import { useState, useEffect, useContext, createContext } from 'react'
+import { useState, useEffect, useContext, createContext } from 'react';
+import "firebase/firestore";
 
 const firebaseConfig = {
 	apiKey: "AIzaSyCDzHh-HS6OLIvb-_XO5ptQ7dKKgHdZgGY",
@@ -39,5 +39,4 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 const storage = getStorage(app);
-
 export { app, auth, db, storage };
