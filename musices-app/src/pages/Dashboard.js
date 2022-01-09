@@ -3,6 +3,7 @@ import { getAuth, signOut } from 'firebase/auth'
 import { useAuthState, db } from '../firebase/config'
 import { doc, onSnapshot } from "firebase/firestore";
 import './Dashboard.css';
+import SpotifyLogin from '../components/SpotifyLogin';
 
 /* window.onload = function() {
 	if (!window.location.hash) {
@@ -29,6 +30,10 @@ const Dashboard = () => {
             <h2> UID: {user?.uid} </h2> 
             
             <button className = "signout-button" onClick={() => signOut(getAuth())}> Sign out </button>
+            
+            <div className = 'spot-login'>
+                <SpotifyLogin/>
+            </div>
             
             
         </div>
