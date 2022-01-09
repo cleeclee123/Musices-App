@@ -4,6 +4,14 @@ import { useAuthState, db } from '../firebase/config'
 import { doc, onSnapshot } from "firebase/firestore";
 import './Dashboard.css';
 
+/* window.onload = function() {
+	if (!window.location.hash) {
+		window.location = window.location + '#loaded';
+		window.location.reload();
+	}
+}
+ */
+
 const Dashboard = () => {
     const { user } = useAuthState();
     const [currentUser, setCurrentUser] = useState([]);
@@ -19,7 +27,8 @@ const Dashboard = () => {
             <h2> Name:  {currentUser.name } </h2>
             <h2> Email: {user?.email} </h2>
             <h2> UID: {user?.uid} </h2> 
-            <button onClick={() => signOut(getAuth())}> Sign out </button>
+            
+            <button className = "signout-button" onClick={() => signOut(getAuth())}> Sign out </button>
             
             
         </div>
