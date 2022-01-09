@@ -4,9 +4,9 @@ import { auth } from "../firebase/config";
 import Loading from "../components/Loading";
 
 export const AuthContext = createContext({});
-export const useAuthContext = () => {
+/* export const useAuthContext = () => {
     return useContext(AuthContext);
-};
+}; */
 
 const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);

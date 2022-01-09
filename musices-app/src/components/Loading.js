@@ -4,7 +4,7 @@ const Loading = () => {
     return (
         <div className = "loading-main">
             <h2 className = "loading-message">
-                Loading...
+                Loading poop poop ha ha 
             </h2>
         </div>
     );

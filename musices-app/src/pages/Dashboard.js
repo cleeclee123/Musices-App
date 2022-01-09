@@ -5,14 +5,6 @@ import { doc, onSnapshot } from "firebase/firestore";
 import './Dashboard.css';
 import SpotifyLogin from '../components/SpotifyLogin';
 
-/* window.onload = function() {
-	if (!window.location.hash) {
-		window.location = window.location + '#loaded';
-		window.location.reload();
-	}
-}
- */
-
 const Dashboard = () => {
     const { user } = useAuthState();
     const [currentUser, setCurrentUser] = useState([]);

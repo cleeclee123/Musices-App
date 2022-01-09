@@ -102,7 +102,8 @@ const SignIn = () => {
                                     <div className = "FormField">
 
                                     <button className = "FormField__Button mr-20"  type = "submit" disabled = {loading}> 
-                                        {loading ? "Logging in ..." : "Sign In"}                                    
+                                        {/* {loading ? "Logging in ..." : "Sign In"} */}
+                                        Sign In                          
                                     </button>
 
                                         <Link to = "/signup" className = "FormField__Link"> Create an account </Link> 
