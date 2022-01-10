@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
 import Navbar from "./components/Navbar";
+import SpotifyLogin from './components/SpotifyLogin';
 import Home from "./pages/Home";
 import About from "./pages/About";
 import SignUp from "./pages/SignUp";
@@ -7,6 +8,7 @@ import SignIn from "./pages/SignIn";
 import Dashboard from './pages/Dashboard';
 import AuthProvider from "./context/auth";
 import { AuthContextProvider, useAuthState } from './firebase/config'
+
 
 const AuthenticatedRoute = ({ component: C, ...props }) => {
 	const { isAuthenticated } = useAuthState()
