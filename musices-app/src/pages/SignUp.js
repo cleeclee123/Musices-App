@@ -1,12 +1,13 @@
 import React, { useState } from "react";
-import { Route, Link, NavLink, } from 'react-router-dom'
+import { Route, Link, NavLink, Redirect } from 'react-router-dom'
 import SignIn from "./SignIn";
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { auth, db } from "../firebase/config";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth, db, useAuthState } from "../firebase/config";
 import { setDoc, doc, Timestamp } from "firebase/firestore";
 import './SignUpIn.css';
 
 const SignUp = () => {
+
     const [data, setData] = useState({
         name: "",
         email: "",
@@ -19,10 +20,9 @@ const SignUp = () => {
     const checkboxHandler = () => {
         setAgree(!agree);
     }
-    
-    // const history = useHistory();
-    
-    const { name, email, password, error, loading } = data;
+        
+    const { name, email, password, error, /* loading */ } = data;
+    const { isAuthenticated } = useAuthState();
     
     const handleChange = (e) => {
         setData({ ...data, [e.target.name]: e.target.value });
@@ -40,7 +40,6 @@ const SignUp = () => {
                 email,
                 password
             );
-            const updated = await updateProfile(auth.currentUser, { displayName: name });
             await setDoc(doc(db, "users", result.user.uid), {
                 uid: result.user.uid,
                 name, /* updated.user.name */
@@ -141,10 +140,13 @@ const SignUp = () => {
                                     {error ? <p className = "error"> {error} </p> : null}
 
                                     <div className = "FormField">
+
+                                        
                                         <button className = "FormField__Button mr-20" type = "submit" disabled = {!agree} > 
-                                            {loading ? "Creating..." : "Sign Up"}
+                                            {isAuthenticated ? <Redirect to = "/dashboard" /> : "Sign Up"}
                                         </button>
-                                
+                                    
+                                        
                                         <Link to = "/signin" className = "FormField__Link"> I'm already member </Link>
                                     </div>
                                     

@@ -1,15 +1,16 @@
 import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
+import PrivateRoute from "./components/PrivateRoute";
 import Navbar from "./components/Navbar";
-import SpotifyLogin from './components/SpotifyLogin';
 import Home from "./pages/Home";
 import About from "./pages/About";
 import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
 import Dashboard from './pages/Dashboard';
+import Error from './pages/Error';
 import AuthProvider from "./context/auth";
-import { AuthContextProvider, useAuthState } from './firebase/config'
+import { AuthContextProvider, /* useAuthState */ } from './firebase/config';
 
-
+/* 
 const AuthenticatedRoute = ({ component: C, ...props }) => {
 	const { isAuthenticated } = useAuthState()
 	console.log(`AuthenticatedRoute: ${isAuthenticated}`)
@@ -32,13 +33,14 @@ const UnauthenticatedRoute = ({ component: C, ...props }) => {
 		<Route
 			{...props}
 			render={routeProps =>
-		  		!isAuthenticated ? <C {...routeProps} /> : <Redirect to = "/dashboard" />
+		  		!isAuthenticated ? <C {...routeProps} /> : <Redirect to = "/dashboard/" />
 			}
 	  	/>
 	)
-  }
+}
+*/
 
-function App() {
+function App() {	
 	return (
 		<AuthContextProvider> 
 		<AuthProvider>
@@ -48,9 +50,10 @@ function App() {
 					<Route exact path = '/'> <Redirect to = '/home' /> </Route> 
 					<Route path = '/home' exact component = {Home} />
 					<Route path = '/about' exact component = {About} />
-					<UnauthenticatedRoute exact path = "/signup" component = {SignUp} />
-        			<UnauthenticatedRoute exact path = "/signin" component = {SignIn} />
-					<AuthenticatedRoute exact path = "/dashboard" component = {Dashboard} />
+					<Route exact path = "/signup" component = {SignUp} />
+        			<Route exact path = "/signin" component = {SignIn} />
+					<PrivateRoute path = "/dashboard"> <Dashboard/> </PrivateRoute>
+					<Route exact path = "/404" component = {Error} />
 				</Switch>
 			</Router> 
 		</AuthProvider>

@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth, db } from "../firebase/config";
+import { auth, db, useAuthState } from "../firebase/config";
 import { updateDoc, doc } from "firebase/firestore";
-import { Link, Route, NavLink, } from 'react-router-dom';
+import { Link, Route, NavLink, Redirect } from 'react-router-dom';
 import SignUp from "./SignUp";
 import './SignUpIn.css';
 
@@ -13,9 +13,9 @@ const SignIn = () => {
         error: null,
         loading: false,
     });
-    // const history = useHistory()
 
-    const { email, password, error, loading } = data;
+    const { email, password, error, /* loading */ } = data;
+    const { isAuthenticated } = useAuthState();
 
     const handleChange = (e) => {
         setData({ ...data, [e.target.name]: e.target.value });
@@ -43,6 +43,7 @@ const SignIn = () => {
             setData({ ...data, error: err.message, loading: false });
         }
     };
+
 
     return (
         <div>       
@@ -101,10 +102,10 @@ const SignIn = () => {
 
                                     <div className = "FormField">
 
-                                    <button className = "FormField__Button mr-20"  type = "submit" disabled = {loading}> 
-                                        {/* {loading ? "Logging in ..." : "Sign In"} */}
-                                        Sign In                          
-                                    </button>
+                                        <button className = "FormField__Button mr-20" type = "submit" > 
+                                            { isAuthenticated ? <Redirect to = "/dashboard" /> : "Sign In"}
+                                        </button>
+                    
 
                                         <Link to = "/signup" className = "FormField__Link"> Create an account </Link> 
                                     </div>
