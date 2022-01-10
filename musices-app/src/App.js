@@ -1,6 +1,8 @@
+import { createContext, useEffect, useState, useContext } from "react";
 import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
 import PrivateRoute from "./components/PrivateRoute";
 import Navbar from "./components/Navbar";
+import Loading from './components/Loading';
 import Home from "./pages/Home";
 import About from "./pages/About";
 import SignUp from "./pages/SignUp";
@@ -8,7 +10,8 @@ import SignIn from "./pages/SignIn";
 import Dashboard from './pages/Dashboard';
 import Error from './pages/Error';
 import { AuthProvider } from "./context/auth";
-import { AuthContextProvider, /* useAuthState */ } from './firebase/config';
+import { AuthContextProvider, auth /* useAuthState */ } from './firebase/config';
+import { onAuthStateChanged } from "firebase/auth";
 
 /* 
 const AuthenticatedRoute = ({ component: C, ...props }) => {
@@ -40,10 +43,21 @@ const UnauthenticatedRoute = ({ component: C, ...props }) => {
 }
 */
 
-function App() {	
-	
-	return (
+function App() {
+	const [newUser, setNewUser] = useState(null);
+    const [isloading, setIsLoading] = useState(true);
 
+    useEffect(() => {
+        onAuthStateChanged(auth, (user) => {
+            setNewUser(user);
+            setIsLoading(false);
+        });
+    }, []);
+	
+	if (isloading) { return <Loading/> }
+
+
+	return ( 
 		<AuthContextProvider> 
 		<AuthProvider>
 			<Router>
