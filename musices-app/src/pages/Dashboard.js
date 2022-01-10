@@ -25,7 +25,7 @@ const AUTH_URL =
 const Dashboard = () => {
     const { user } = useAuthState();
     const [currentUser, setCurrentUser] = useState([]);
-    const [tracks,, setTracks] = useState([]);
+    const [tracks, setTracks] = useState([]);
     const [token, setToken] = useState('');
 
     const id = '06HL4z0CvFAxyc27GXpf02';
