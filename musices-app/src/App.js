@@ -7,7 +7,7 @@ import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
 import Dashboard from './pages/Dashboard';
 import Error from './pages/Error';
-import AuthProvider from "./context/auth";
+import { AuthProvider } from "./context/auth";
 import { AuthContextProvider, /* useAuthState */ } from './firebase/config';
 
 /* 
@@ -41,7 +41,9 @@ const UnauthenticatedRoute = ({ component: C, ...props }) => {
 */
 
 function App() {	
+	
 	return (
+
 		<AuthContextProvider> 
 		<AuthProvider>
 			<Router>

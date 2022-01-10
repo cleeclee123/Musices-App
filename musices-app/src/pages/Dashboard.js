@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { getAuth, signOut } from 'firebase/auth'
 import { useAuthState, db } from '../firebase/config'
 import { doc, onSnapshot } from "firebase/firestore";
+import { Link } from 'react-router-dom';
 import './Dashboard.css';
 // import SpotifyLogin from '../components/SpotifyLogin';
 
@@ -40,11 +41,13 @@ const Dashboard = () => {
             <h2> Email: {user?.email} </h2>
             <h2> UID: {user?.uid} </h2> 
             
-            <div> 
-                <button className = "signout-button" onClick={() => signOut(getAuth())}> Sign out </button>
+            <div className = 'signout-button-parent'>
+                <Link to = "/home">
+                    <button className = "signout-button" onClick = {() => signOut(getAuth())}> Sign out </button>
+                </Link>
             </div>
 
-            <div className = 'spot-login-parent'>            
+            <div className = 'spot-login-parent'>        
                 <button className = "spot-login" onClick = {handleLogin}> Login into Spotify </button>
             </div>
 
