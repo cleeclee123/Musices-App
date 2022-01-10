@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { getAuth, signOut } from 'firebase/auth'
 import { useAuthState, db } from '../firebase/config'
 import { doc, onSnapshot } from "firebase/firestore";
 import { Link } from 'react-router-dom';
 import './Dashboard.css';
+import axios from 'axios';
 // import SpotifyLogin from '../components/SpotifyLogin';
 
 const CLIENT_ID = 'f5910041cd764887a9ddb43e035a8b8a';
@@ -24,6 +25,12 @@ const AUTH_URL =
 const Dashboard = () => {
     const { user } = useAuthState();
     const [currentUser, setCurrentUser] = useState([]);
+    const [tracks,, setTracks] = useState([]);
+    const [token, setToken] = useState('');
+
+    const id = '06HL4z0CvFAxyc27GXpf02';
+	const market = 'US';
+
     const docRef = doc(db, 'users', user?.uid);
 
     onSnapshot(docRef, (doc) => {
@@ -33,6 +40,23 @@ const Dashboard = () => {
     const handleLogin = () => {
         window.location = `${SPOTIFY_AUTHORIZE_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URL_AFTER_LOGIN}&scope=${SCOPES_URL_PARAM}&response_type=token&show_dialog=true`;
     };
+
+    var Buffer = require('buffer/').Buffer
+
+    useEffect(()=>{
+		axios('https://accounts.spotify.com/api/token', {
+			'method': 'POST',
+			'headers': {
+				 'Content-Type':'application/x-www-form-urlencoded',
+				 'Authorization': 'Basic ' + (new Buffer('f5910041cd764887a9ddb43e035a8b8a' + ':' + '5ee27ed26cac40d6a98aa43ce98478b5').toString('base64')),
+			},
+			data: 'grant_type=client_credentials'
+		}).then(tokenresponse => {
+			console.log(tokenresponse.data.access_token);
+			setToken(tokenresponse.data.access_token);
+
+		}).catch(error => console.log(error));
+	}, [])
 
     return ( 
         <div className = 'dashboard-main'> 
@@ -52,7 +76,7 @@ const Dashboard = () => {
             </div>
 
         </div>
-    );   
+    )   
 };
 
 export default Dashboard;

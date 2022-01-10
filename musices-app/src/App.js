@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState, useContext } from "react";
+import { useEffect, useState } from "react";
 import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
 import PrivateRoute from "./components/PrivateRoute";
 import Navbar from "./components/Navbar";
@@ -44,19 +44,17 @@ const UnauthenticatedRoute = ({ component: C, ...props }) => {
 */
 
 function App() {
-	const [newUser, setNewUser] = useState(null);
     const [isloading, setIsLoading] = useState(true);
 
     useEffect(() => {
         onAuthStateChanged(auth, (user) => {
-            setNewUser(user);
             setIsLoading(false);
         });
     }, []);
 	
-	if (isloading) { return <Loading/> }
+	if (isloading) { return <h1> LOADING </h1> }
 
-
+	
 	return ( 
 		<AuthContextProvider> 
 		<AuthProvider>
