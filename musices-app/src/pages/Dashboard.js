@@ -5,6 +5,7 @@ import { doc, onSnapshot } from "firebase/firestore";
 import { Link } from 'react-router-dom';
 import './Dashboard.css';
 import axios from 'axios';
+import GetTracks from './components/GetTracks';
 // import SpotifyLogin from '../components/SpotifyLogin';
 
 const CLIENT_ID = 'f5910041cd764887a9ddb43e035a8b8a';
@@ -37,44 +38,68 @@ const Dashboard = () => {
         setCurrentUser(doc.data());
     })
 
-    const handleLogin = () => {
+    const redirectSpot = () => {
         window.location = `${SPOTIFY_AUTHORIZE_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URL_AFTER_LOGIN}&scope=${SCOPES_URL_PARAM}&response_type=token&show_dialog=true`;
     };
 
     var Buffer = require('buffer/').Buffer
 
     useEffect(()=>{
-		axios('https://accounts.spotify.com/api/token', {
-			'method': 'POST',
-			'headers': {
-				 'Content-Type':'application/x-www-form-urlencoded',
-				 'Authorization': 'Basic ' + (new Buffer('f5910041cd764887a9ddb43e035a8b8a' + ':' + '5ee27ed26cac40d6a98aa43ce98478b5').toString('base64')),
-			},
-			data: 'grant_type=client_credentials'
-		}).then(tokenresponse => {
-			console.log(tokenresponse.data.access_token);
-			setToken(tokenresponse.data.access_token);
+        axios('https://accounts.spotify.com/api/token', {
+            'method': 'POST',
+            'headers': {
+                'Content-Type':'application/x-www-form-urlencoded',
+                'Authorization': 'Basic ' + (new Buffer('f5910041cd764887a9ddb43e035a8b8a' + ':' + '5ee27ed26cac40d6a98aa43ce98478b5').toString('base64')),
+            },
+            data: 'grant_type=client_credentials'
+        }).then(tokenresponse => {
+            console.log(tokenresponse.data.access_token);
+            setToken(tokenresponse.data.access_token);
+            
+            // Api call for retrieving tracks data
+            axios(`https://api.spotify.com/v1/artists/${id}/top-tracks?market=${market}`,{
+                'method': 'GET',
+                'headers': {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'Authorization': 'Bearer ' + tokenresponse.data.access_token
+                }
+            }).then(trackresponse=> {
+                console.log(trackresponse.data.tracks);
+                setTracks(trackresponse.data.tracks);
+            }).catch(error=> console.log(error))
 
-		}).catch(error => console.log(error));
-	}, [])
+        }).catch(error => console.log(error));
+    
+    }, [])
 
+    function getName(data) {
+        let names = [];
+
+		data.map(each => {
+			names.push(each.name);
+		})
+        return names;
+    }
     return ( 
         <div className = 'dashboard-main'> 
             <h1> Hello, you are now signed in </h1>
             <h2> Name:  {currentUser.name } </h2>
             <h2> Email: {user?.email} </h2>
             <h2> UID: {user?.uid} </h2> 
+            <h2> Access Token: {token} </h2>
+
+            <h3> Tracks: {getName(tracks)} </h3>
             
             <div className = 'signout-button-parent'>
                 <Link to = "/home">
                     <button className = "signout-button" onClick = {() => signOut(getAuth())}> Sign out </button>
                 </Link>
             </div>
-
+            
             <div className = 'spot-login-parent'>        
-                <button className = "spot-login" onClick = {handleLogin}> Login into Spotify </button>
+                <button className = "spot-login" onClick = { redirectSpot } > Login into Spotify </button>
             </div>
-
         </div>
     )   
 };
