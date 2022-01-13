@@ -1,6 +1,28 @@
-.player-main {
+.player-temp {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+}
+
+.signout-button-parent {
+    position: absolute;
+    top: 12%;
+    left: 95%;
+    transform: translate(-50%, -50%);
+}
+
+.signout-button {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 12px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    outline: none;
+    color: #fff;
+    background-color: #0011ff;
+    border: none;
+    border-radius: 20px;
+    box-shadow: 0 5px #999;
 }

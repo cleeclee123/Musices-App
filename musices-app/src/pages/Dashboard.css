@@ -5,18 +5,12 @@
     transform: translate(-50%, -50%);
 }
 
-
-.dahsboard-buttons {
+.signout-button-parent {
     position: absolute;
-    top: 16%;
-    left: 90%;
+    top: 12%;
+    left: 95%;
     transform: translate(-50%, -50%);
 }
-
-.dashboard-app {
-    padding-top: 15rem;
-}
-
 
 .signout-button {
     display: inline-block;
@@ -33,11 +27,14 @@
     box-shadow: 0 5px #999;
 }
 
-.spot-login-parent {
-    padding-top: 1rem;
+.player-login-parent {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
-.spot-login {
+.player-login {
     background-color: #4CAF50; /* Green */
     border: none;
     border-radius: 20px;
