@@ -1,9 +1,22 @@
-.dashboard-main {
+.dashboard-user-info {
     position: absolute;
-    top: 50%;
-    left: 50%;
+    top: 16%;
+    left: 22.5%;
     transform: translate(-50%, -50%);
 }
+
+
+.dahsboard-buttons {
+    position: absolute;
+    top: 16%;
+    left: 90%;
+    transform: translate(-50%, -50%);
+}
+
+.dashboard-app {
+    padding-top: 15rem;
+}
+
 
 .signout-button {
     display: inline-block;

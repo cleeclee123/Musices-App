@@ -5,8 +5,6 @@ import { doc, onSnapshot } from "firebase/firestore";
 import { Link } from 'react-router-dom';
 import './Dashboard.css';
 import axios from 'axios';
-import GetTracks from './components/GetTracks';
-// import SpotifyLogin from '../components/SpotifyLogin';
 
 const CLIENT_ID = 'f5910041cd764887a9ddb43e035a8b8a';
 const SPOTIFY_AUTHORIZE_ENDPOINT = "https://accounts.spotify.com/authorize";
@@ -71,7 +69,7 @@ const Dashboard = () => {
 
         }).catch(error => console.log(error));
     
-    }, [])
+    }, []);
 
     function getName(data) {
         let names = [];
@@ -81,24 +79,36 @@ const Dashboard = () => {
 		})
         return names;
     }
+
+
     return ( 
         <div className = 'dashboard-main'> 
-            <h1> Hello, you are now signed in </h1>
-            <h2> Name:  {currentUser.name } </h2>
-            <h2> Email: {user?.email} </h2>
-            <h2> UID: {user?.uid} </h2> 
-            <h2> Access Token: {token} </h2>
 
-            <h3> Tracks: {getName(tracks)} </h3>
-            
-            <div className = 'signout-button-parent'>
-                <Link to = "/home">
-                    <button className = "signout-button" onClick = {() => signOut(getAuth())}> Sign out </button>
-                </Link>
+            <div className = 'dashboard-user-info'> 
+                <p>
+                    Hello, you are now signed in <br></br>
+                    Name:  {currentUser.name } <br></br>
+                    Email: {user?.email} <br></br>
+                    UID: {user?.uid} <br></br>
+                    Access Token: {token} 
+                </p>
+            </div>
+
+            <div className = 'dashboard-app'> 
+                <h3> Tracks: {getName(tracks)} </h3>
+                 
             </div>
             
-            <div className = 'spot-login-parent'>        
-                <button className = "spot-login" onClick = { redirectSpot } > Login into Spotify </button>
+            <div className = 'dahsboard-buttons'> 
+                <div className = 'signout-button-parent'>
+                    <Link to = "/home">
+                        <button className = "signout-button" onClick = {() => signOut(getAuth())}> Sign out </button>
+                    </Link>
+                </div>
+                
+                <div className = 'spot-login-parent'>        
+                    <button className = "spot-login" onClick = { redirectSpot } > Login into Spotify </button>
+                </div>
             </div>
         </div>
     )   

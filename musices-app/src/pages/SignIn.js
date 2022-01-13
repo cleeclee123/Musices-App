@@ -44,7 +44,6 @@ const SignIn = () => {
         }
     };
 
-
     return (
         <div>       
             <div className="Form">
@@ -101,12 +100,11 @@ const SignIn = () => {
                                     {error ? <p className = "error"> {error} </p> : null}
 
                                     <div className = "FormField">
-
-                                        <button className = "FormField__Button mr-20" type = "submit" > 
-                                            { isAuthenticated ? <Redirect to = "/dashboard" /> : "Sign In"}
+                                        
+                                        <button className = "FormField__Button mr-20" type = "submit"> 
+                                            {isAuthenticated ? <Redirect to = "/dashboard" /> : "Sign Up"}
                                         </button>
-                    
-
+                                    
                                         <Link to = "/signup" className = "FormField__Link"> Create an account </Link> 
                                     </div>
                                 </fieldset>

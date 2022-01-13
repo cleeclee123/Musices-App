@@ -8,7 +8,7 @@ const PrivateRoute = ({ children, ...rest }) => {
 	return (
     	<Route
       		{...rest}
-      		render={({ location }) =>
+      		render = {({ location }) =>
         		auth.user ? (
           			children
         		) : (
