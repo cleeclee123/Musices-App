@@ -17,8 +17,7 @@ const SCOPES = [
 ];
 const SCOPES_URL_PARAM = SCOPES.join(SPACE_DELMITER);
 
-const AUTH_URL =
-  "https://accounts.spotify.com/authorize?client_id=f5910041cd764887a9ddb43e035a8b8a&response_type=code&redirect_uri=http://localhost:3000/dashboard&scope=streaming%20user-read-email%20user-read-private%20user-library-read%20user-library-modify%20user-read-playback-state%20user-modify-playback-state"
+const AUTH_URL = "https://accounts.spotify.com/authorize?client_id=f5910041cd764887a9ddb43e035a8b8a&response_type=code&redirect_uri=http://localhost:3000/dahsboard&scope=streaming%20user-read-email%20user-read-private%20user-library-read%20user-library-modify%20user-read-playback-state%20user-modify-playback-state"
 
 
 const Dashboard = () => {
@@ -107,7 +106,7 @@ const Dashboard = () => {
                 </div>
                 
                 <div className = 'spot-login-parent'>        
-                    <button className = "spot-login" onClick = { redirectSpot } > Login into Spotify </button>
+                    <button className = "spot-login" onClick = { redirectSpot }> Login into Spotify </button>
                 </div>
             </div>
         </div>

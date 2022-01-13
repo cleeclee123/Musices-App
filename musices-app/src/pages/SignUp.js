@@ -6,6 +6,20 @@ import { auth, db, useAuthState } from "../firebase/config";
 import { setDoc, doc, Timestamp } from "firebase/firestore";
 import './SignUpIn.css';
 
+
+const CLIENT_ID = 'f5910041cd764887a9ddb43e035a8b8a';
+const SPOTIFY_AUTHORIZE_ENDPOINT = "https://accounts.spotify.com/authorize";
+const REDIRECT_URL_AFTER_LOGIN = "http://localhost:3000/dashboard";
+const SPACE_DELMITER = "%20"; 
+const SCOPES = [
+    "user-read-currently-playing",
+    "user-read-playback-state",
+    "playlist-read-private",
+];
+const SCOPES_URL_PARAM = SCOPES.join(SPACE_DELMITER);
+const AUTH_URL = `${SPOTIFY_AUTHORIZE_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URL_AFTER_LOGIN}&scope=${SCOPES_URL_PARAM}&response_type=token&show_dialog=true`;
+
+
 const SignUp = () => {
 
     const [data, setData] = useState({
@@ -58,6 +72,13 @@ const SignUp = () => {
             setData({ ...data, error: err.message, loading: false });
         }
     };
+
+    const redirectSpot = () => {
+        setTimeout(() => {
+            window.location = AUTH_URL;
+        }, 200);
+    };
+
 
     return (
         <div>
@@ -142,10 +163,10 @@ const SignUp = () => {
                                     <div className = "FormField">
 
                                         
-                                        <button className = "FormField__Button mr-20" type = "submit" disabled = {!agree} > 
+                                        <button className = "FormField__Button mr-20" type = "submit" disabled = {!agree + !name + !password + !email} onClick = {redirectSpot} > 
                                             {isAuthenticated ? <Redirect to = "/dashboard" /> : "Sign Up"}
                                         </button>
-                                    
+                                
                                         
                                         <Link to = "/signin" className = "FormField__Link"> I'm already member </Link>
                                     </div>

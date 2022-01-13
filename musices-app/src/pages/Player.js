@@ -1,12 +1,20 @@
-import React, { Component } from 'react';
+import React, { } from 'react';
+import './Dashboard.css';
 import './Player.css';
 
-export default class Player extends Component {
-    render() {
-        return ( 
-            <div className = 'player-main'> 
-                <h1> Player Page </h1>
+
+const Player = () => {
+
+
+    return ( 
+        <div className = 'player-main'> 
+            <h1> Player Page </h1>
+            <div className = 'spot-login-parent'>        
+                <button className = "spot-login" > Login into Spotify </button>
             </div>
-        )
-    }
+        </div>
+    )
+
 }
+
+export default Player;
