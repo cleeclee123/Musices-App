@@ -1,23 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { getAuth, signOut } from 'firebase/auth'
 import { useAuthState, db } from '../firebase/config'
-import { doc, onSnapshot } from "firebase/firestore";
+import { collection, doc, onSnapshot } from "firebase/firestore";
 import { Link } from 'react-router-dom';
 import './Dashboard.css';
 import axios from 'axios';
-
 
 const Dashboard = () => {
     const { user } = useAuthState();
     const [currentUser, setCurrentUser] = useState([]);
     const [token, setToken] = useState('');
 
-    const docRef = doc(db, 'users', user?.uid);
+    /* const docRef = doc(db, 'users', user?.uid);
 
     onSnapshot(docRef, (doc) => {
         setCurrentUser(doc.data());
     })
-    
+ */
     var Buffer = require('buffer/').Buffer
 
     useEffect(() => {
@@ -33,19 +32,16 @@ const Dashboard = () => {
 			setToken(tokenresponse.data.access_token);
         }).catch(error => console.log(error));
 	}, []);
-    
+
 
     return ( 
         <div className = 'dashboard-main'> 
 
             <div className = 'dashboard-user-info'> 
-                <p>
-                    Hello, you are now signed in <br></br>
-                    Name:   <br></br>
-                    Email: {user?.email} <br></br>
-                    UID: {user?.uid} <br></br>
-                    Access Token: {token}
-                </p>
+                Name: <br></br>
+                Email: {user?.email} <br></br>
+                UID: {user?.uid} <br></br>
+                Access Token: {token} <br></br>
             </div>
 
            
