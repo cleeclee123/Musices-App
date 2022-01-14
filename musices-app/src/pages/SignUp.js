@@ -3,7 +3,7 @@ import { Route, Link, NavLink, Redirect } from 'react-router-dom'
 import SignIn from "./SignIn";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth, db, useAuthState } from "../firebase/config";
-import { setDoc, doc, Timestamp } from "firebase/firestore";
+import { Timestamp, addDoc, collection } from "firebase/firestore";
 import './SignUpIn.css';
 
 
@@ -21,7 +21,6 @@ const AUTH_URL = `${SPOTIFY_AUTHORIZE_ENDPOINT}?client_id=${CLIENT_ID}&redirect_
 
 
 const SignUp = () => {
-
     const [data, setData] = useState({
         name: "",
         email: "",
@@ -38,12 +37,18 @@ const SignUp = () => {
     const { name, email, password, error, /* loading */ } = data;
     const { isAuthenticated } = useAuthState();
     
+                
     const handleChange = (e) => {
         setData({ ...data, [e.target.name]: e.target.value });
     };
     
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        const collectionRef = collection(db, "users");
+        const payload = { name, email, password, createdAt: Timestamp.fromDate(new Date()) };
+        const docRef = await addDoc(collectionRef, payload);
+
         setData({ ...data, error: null, loading: true });
         if (!name || !email || !password) {
             setData({ ...data, error: "All fields are required" });
@@ -54,12 +59,7 @@ const SignUp = () => {
                 email,
                 password
             );
-            await setDoc(doc(db, "users", result.user.uid), {
-                uid: result.user.uid,
-                name, /* updated.user.name */
-                email,
-                createdAt: Timestamp.fromDate(new Date()),
-            });
+
             setData({
                 name: "",
                 email: "",
@@ -67,7 +67,6 @@ const SignUp = () => {
                 error: null,
                 loading: false,
             });
-            //history.replace("/");
         } catch (err) {
             setData({ ...data, error: err.message, loading: false });
         }
@@ -76,7 +75,7 @@ const SignUp = () => {
     const redirectSpot = () => {
         setTimeout(() => {
             window.location = AUTH_URL;
-        }, 200);
+        }, 1000);
     };
 
 
