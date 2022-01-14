@@ -7,6 +7,12 @@ import './Dashboard.css';
 import axios from 'axios';
 import { transcode } from 'buffer';
 
+// cheeky token refresh 
+/* window.setTimeout(function () {
+    window.location.reload();
+}, 10000);
+ */
+
 const Dashboard = () => {
     const { user } = useAuthState();
     const [currentUser, setCurrentUser] = useState([]);
