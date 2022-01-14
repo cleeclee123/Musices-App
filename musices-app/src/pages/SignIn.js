@@ -60,8 +60,8 @@ const SignIn = () => {
 
     const redirectSpot = () => {
         setTimeout(() => {
-            window.location = AUTH_URL;
-        }, 500);
+            window.location = AUTH_URL;  
+        }, 200);
     };
 
     return (
