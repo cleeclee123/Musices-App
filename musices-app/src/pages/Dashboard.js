@@ -8,10 +8,10 @@ import axios from 'axios';
 import { transcode } from 'buffer';
 
 // cheeky token refresh 
-/* window.setTimeout(function () {
+window.setTimeout(function () {
     window.location.reload();
-}, 10000);
- */
+}, 3300000);
+
 
 const Dashboard = () => {
     const { user } = useAuthState();
