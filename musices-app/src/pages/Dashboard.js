@@ -1,23 +1,35 @@
 import React, { useState, useEffect } from 'react';
-import { getAuth, signOut } from 'firebase/auth'
+import { confirmPasswordReset, getAuth, signOut } from 'firebase/auth'
 import { useAuthState, db } from '../firebase/config'
-import { collection, doc, onSnapshot } from "firebase/firestore";
+import { collection, query, where, onSnapshot } from "firebase/firestore";
 import { Link } from 'react-router-dom';
 import './Dashboard.css';
 import axios from 'axios';
+import { transcode } from 'buffer';
 
 const Dashboard = () => {
     const { user } = useAuthState();
     const [currentUser, setCurrentUser] = useState([]);
     const [token, setToken] = useState('');
 
-    /* const docRef = doc(db, 'users', user?.uid);
+    const collectionRef = collection(db, 'users');
+    const queryRef = query(collectionRef, where("email", "==", user?.email))
+    
+    useEffect( () =>
+        onSnapshot(queryRef, (snapshot) =>
+            setCurrentUser(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
+        ), []
+    );
 
-    onSnapshot(docRef, (doc) => {
-        setCurrentUser(doc.data());
-    })
- */
-    var Buffer = require('buffer/').Buffer
+    function getName(data) {
+        let names = [];
+        data.map(each => {
+            names.push(each.name);
+        })
+        return names;
+    }
+
+   var Buffer = require('buffer/').Buffer
 
     useEffect(() => {
 		axios('https://accounts.spotify.com/api/token', {
@@ -31,6 +43,8 @@ const Dashboard = () => {
 			console.log(tokenresponse.data.access_token);
 			setToken(tokenresponse.data.access_token);
         }).catch(error => console.log(error));
+
+
 	}, []);
 
 
@@ -38,10 +52,12 @@ const Dashboard = () => {
         <div className = 'dashboard-main'> 
 
             <div className = 'dashboard-user-info'> 
-                Name: <br></br>
-                Email: {user?.email} <br></br>
-                UID: {user?.uid} <br></br>
-                Access Token: {token} <br></br>
+                <p>
+                    Name: {getName(currentUser)} <br></br>
+                    Email: {user?.email} <br></br>
+                    UID: {user?.uid} <br></br>
+                    Access Token: {token} <br></br> 
+                </p>
             </div>
 
            
