@@ -163,7 +163,7 @@ const SignUp = () => {
 
                                         
                                         <button className = "FormField__Button mr-20" type = "submit" disabled = {!agree + !name + !password + !email} onClick = {redirectSpot} > 
-                                            {/* {isAuthenticated ? <Redirect to = "/dashboard" /> : "Sign Up"} */}
+                                            {isAuthenticated ? <Redirect to = "/dashboard" /> : "Sign Up"}
                                         </button>
                                 
                                         

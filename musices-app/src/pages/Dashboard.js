@@ -189,7 +189,7 @@ const Dashboard = (props) => {
            <div className = 'dashboard-spotify-player'>
                     <SpotifyPlayer 
                        token = {token}
-                      /*  uris = {playingTrack.uri} */
+                       uris = {playingTrack}
                     />
            </div>
                 
