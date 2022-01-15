@@ -3,7 +3,7 @@ import { getAuth, signOut } from 'firebase/auth'
 import { useAuthState, db } from '../firebase/config'
 import { collection, query, where, onSnapshot } from "firebase/firestore";
 import { Link } from 'react-router-dom';
-import './Dashboard.css';
+import './User.css';
 import axios from 'axios';
 
 // cheeky token refresh 
@@ -12,7 +12,7 @@ window.setTimeout(function () {
 }, 3300000);
 
 
-const Dashboard = () => {
+const UserPage = () => {
     const { user } = useAuthState();
     const [currentUser, setCurrentUser] = useState([]);
     const [token, setToken] = useState('');
@@ -51,44 +51,17 @@ const Dashboard = () => {
 
 	}, []);
 
-    // Search Bar Stuff
-    const clearIcon = document.querySelector(".clear-icon");
-    const searchBar = document.querySelector(".search");
- 
-    /* searchBar.addEventListener("keyup", () => {
-        if (searchBar.value && clearIcon.style.visibility != "visible") {
-            clearIcon.style.visibility = "visible";
-        } else if (!searchBar.value) {
-            clearIcon.style.visibility = "hidden";
-        }
-    });
-
-    clearIcon.addEventListener("click", () => {
-        searchBar.value = "";
-        clearIcon.style.visibility = "hidden";
-    }) */
-
     return ( 
-        <div className = 'dashboard-main'> 
+        <div className = 'user-main'> 
 
-            {/* <div className = 'dashboard-user-info'> 
+            <div className = 'userpage-user-info'> 
                 <small>
                     Name: {getName(currentUser)} <br></br>
                     Email: {user?.email} <br></br>
                     UID: {user?.uid} <br></br>
                     Access Token: {token} <br></br> 
                 </small>
-            </div> */}
-
-            <div className = 'dashboard-search-parent'>
-                <h3> Search for Songs, Albums, or Artists </h3>
-
-                <form class = "dash-search-bar">
-                    <input type = "text" placeholder = "Search.." name = "search" size = "150"/>
-                    <button type="submit"> <i class="fa fa-search"> Go </i> </button>
-                </form>
-
-            </div>
+            </div> 
                 
             <div className = 'signout-button-parent'>
                 <Link to = "/home">
@@ -101,4 +74,4 @@ const Dashboard = () => {
     )   
 };
 
-export default Dashboard;
+export default UserPage;
