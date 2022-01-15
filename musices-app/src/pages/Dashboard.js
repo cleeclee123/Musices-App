@@ -3,8 +3,14 @@ import { getAuth, signOut } from 'firebase/auth'
 import { useAuthState, db } from '../firebase/config'
 import { collection, query, where, onSnapshot } from "firebase/firestore";
 import { Link } from 'react-router-dom';
-import './Dashboard.css';
+import SpotifyWebApi from 'spotify-web-api-node';
 import axios from 'axios';
+import './Dashboard.css';
+
+const spotifyApi = new SpotifyWebApi({
+    clientId: "f5910041cd764887a9ddb43e035a8b8a",  
+})
+
 
 // cheeky token refresh 
 window.setTimeout(function () {
@@ -52,23 +58,30 @@ const Dashboard = (props) => {
 	}, []);
 
     // Search Bar Stuff
-    const [searchTerm, setSearchTerm] = useState('');
-    const [errorMessage, setErrorMessage] = useState('');
+    const [search, setSearch] = useState("");
+    const [SearchResults, setSearchResults] = useState([]);
     const [formData, setFormData] = useState({ userQuery: "" });
 
-    const handleInputChange = (event) => {
-        const searchTerm = event.target.value;
-        setSearchTerm(searchTerm);
-    }
-    const handleSearch = (event) => {
-        event.preventDefault();
-        if (searchTerm.trim() !== '') {
-            setErrorMessage('');
-            props.handleSearch(searchTerm);
-        } else {
-            setErrorMessage('Please enter search term');
+    useEffect(() => {
+        if (!token) {
+            return
         }
-    };
+        spotifyApi.setAccessToken(token)
+    }, [token])
+
+    useEffect(() => {
+        if (!token) {
+            return
+        }
+        if (!search) {
+            return setSearchResults([]);
+        }
+
+        spotifyApi.searchTracks(search).then(res => {
+            console.log(res.body.tracks.items);
+        })
+    }, [search, token])
+
 
     const handleClear = () => {
         setFormData({ searchTerm: "" });
@@ -97,16 +110,16 @@ const Dashboard = (props) => {
             <div className = 'dashboard-search-parent'>
                 <h3> Search for Songs, Albums, or Artists </h3>
 
-                <form class = "dash-search-bar-main" onSubmit = {handleSearch}>
-                    {errorMessage && <p className = "errorMessage"> {errorMessage} </p>}
+                <form class = "dash-search-bar-main" >
+                    
 
                     <input 
                         className = "dash-search-bar"
                         name = "searchTerm" 
                         type = "search"
-                        value = {searchTerm} 
+                        value = {search}
+                        onChange = {event => setSearch(event.target.value)}
                         placeholder = "Search" 
-                        onChange = {handleInputChange}
                         autoComplete = 'off'
                         size = "150" 
                     />
