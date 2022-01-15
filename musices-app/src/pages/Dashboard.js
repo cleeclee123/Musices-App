@@ -77,9 +77,13 @@ const Dashboard = (props) => {
             return setSearchResults([]);
         }
 
+        let cancel = false;
         spotifyApi.searchTracks(search).then(res => {
             setSearchResults(res.body.tracks.items.map(track => {
-
+                
+                if (cancel) {
+                    return
+                }
                 const smallestAlbumImage = track.album.images.reduce((smallest, image) => {
                     if (image.height < smallest.height) {
                         return image
@@ -95,6 +99,8 @@ const Dashboard = (props) => {
                 }
             }))
         })
+
+        return () => cancel = true;
     }, [search, token])
 
     console.log(SearchResults);
