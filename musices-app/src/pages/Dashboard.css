@@ -55,6 +55,26 @@ form.dash-search-bar-main::after {
     clear: both;
     display: table;
 }
+
+.dashboard-search-results {
+    position: absolute;
+    left: 50px;
+    top: 200px;
+}
+
+.dash-result-image {
+    height: 128px;
+    width: 128px;
+}
+
+.dash-result-info {
+    
+    
+
+}
+
+
+
   
 .signout-button-parent {
     position: absolute;

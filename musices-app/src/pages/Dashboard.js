@@ -5,6 +5,7 @@ import { collection, query, where, onSnapshot } from "firebase/firestore";
 import { Link } from 'react-router-dom';
 import SpotifyWebApi from 'spotify-web-api-node';
 import axios from 'axios';
+import TrackSearchResult from './components/TrackSearchResult';
 import './Dashboard.css';
 
 const spotifyApi = new SpotifyWebApi({
@@ -155,6 +156,19 @@ const Dashboard = (props) => {
                     />
                 </form>
             </div>
+
+           <div className = 'dashboard-search-results'> 
+                {SearchResults.map(track => (
+                    <div className = 'dash-result-wrapper'> 
+                        <div className = 'dash-result-image-main'> <img className = 'dash-result-image' src = {track.albumUrl} /> </div>
+                        <div className = 'dash-result-info'>
+                            <div className = 'dash-result-title'> {track.title}  </div>
+                            <div className = 'dash-result-artist'> {track.artist} </div>
+                        </div>
+                    </div>
+                    /* <TrackSearchResult track = {track} key = {track.uri} /> */
+                ))}
+           </div>
                 
             <div className = 'signout-button-parent'>
                 <Link to = "/home">
