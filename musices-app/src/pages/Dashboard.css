@@ -7,8 +7,8 @@
 
 .dash-clear-icon {
     position: absolute;
-    top: 7px;
-    right: 40px;
+    top: 77px;
+    right: 275px;
     width: 12px;
     cursor: pointer;
     visibility: hidden;
@@ -18,7 +18,7 @@
     box-sizing: border-box;
 }
   
-form.dash-search-bar input[type=text] {
+form.dash-search-bar-main input[type=search] {
     padding: 10px;
     font-size: 17px;
     border: 1px solid grey;
@@ -27,7 +27,7 @@ form.dash-search-bar input[type=text] {
     background: #f1f1f1;
 }
   
-form.dash-search-bar button {
+form.dash-search-bar-main button {
     float: left;
     width: 20%;
     padding: 10px;
@@ -39,11 +39,11 @@ form.dash-search-bar button {
     cursor: pointer;
 }
   
-form.dash-search-bar button:hover {
+form.dash-search-bar-main button:hover {
     background: #0b7dda;
 }
   
-form.dash-search-bar::after {
+form.dash-search-bar-main::after {
     content: "";
     clear: both;
     display: table;
