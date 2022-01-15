@@ -14,11 +14,19 @@ const SPACE_DELMITER = "%20";
 const SCOPES = [
     "user-read-currently-playing",
     "user-read-playback-state",
+    "user-modify-playback-state",
     "playlist-read-private",
+    "streaming",
+    "user-read-email",
+    "user-read-private",
+    "user-library-read",
+    "user-library-modify",
 ];
+
 const SCOPES_URL_PARAM = SCOPES.join(SPACE_DELMITER);
 const AUTH_URL = `${SPOTIFY_AUTHORIZE_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URL_AFTER_LOGIN}&scope=${SCOPES_URL_PARAM}&response_type=token&show_dialog=true`;
 console.log(AUTH_URL);
+
 
 const SignIn = () => {
     const [data, setData] = useState({

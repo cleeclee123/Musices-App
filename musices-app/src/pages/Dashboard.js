@@ -5,7 +5,7 @@ import { collection, query, where, onSnapshot } from "firebase/firestore";
 import { Link } from 'react-router-dom';
 import SpotifyWebApi from 'spotify-web-api-node';
 import axios from 'axios';
-import TrackSearchResult from './components/TrackSearchResult';
+import SpotifyPlayer from 'react-spotify-web-playback';
 import './Dashboard.css';
 
 
@@ -119,7 +119,7 @@ const Dashboard = (props) => {
 
     window.onload=function(){
         searchBar.addEventListener("keyup", () => {
-            if (searchBar.value && clearIcon.style.visibility != "visible") {
+            if (searchBar.value && clearIcon.style.visibility !== "visible") {
                 clearIcon.style.visibility = "visible";
             } else if (!searchBar.value) {
                 clearIcon.style.visibility = "hidden";
@@ -130,6 +130,17 @@ const Dashboard = (props) => {
             searchBar.value = "";
             clearIcon.style.visibility = "hidden";
         })
+    }
+
+    // Playback
+    const [playingTrack, setPlayingTrack] = useState();
+
+    function chooseTrack(track) {
+        setPlayingTrack(track)
+        setSearch('')
+    }
+    function handlePlay() {
+
     }
     
     return ( 
@@ -163,7 +174,7 @@ const Dashboard = (props) => {
 
            <div className = 'dashboard-search-results'> 
                 {SearchResults.map(track => (
-                    <div className = 'dash-result-wrapper'> 
+                    <div className = 'dash-result-wrapper' onClick = {handlePlay}> 
                         <div className = 'dash-result-image-main'> <img className = 'dash-result-image' src = {track.albumUrl} /> </div>
                         <div className = 'dash-result-info'>
                             <div className = 'dash-result-title'> {track.title}  </div>
@@ -172,6 +183,12 @@ const Dashboard = (props) => {
                     </div>
                     /* <TrackSearchResult track = {track} key = {track.uri} /> */
                 ))}
+           </div>
+
+           <div className = 'dashboard-spotify-player'>
+                    <SpotifyPlayer 
+                        token = {token}
+                    />
            </div>
                 
             <div className = 'signout-button-parent'>
