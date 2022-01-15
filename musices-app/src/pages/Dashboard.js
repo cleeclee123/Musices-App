@@ -129,12 +129,14 @@ const Dashboard = (props) => {
     
     return ( 
         <div className = 'dashboard-main'> 
+            <div className = 'dash-currentuser'> 
+                <h1> Hi {getName(currentUser)} </h1>
+            </div>
+
             <div className = 'dashboard-search-parent'>
                 <h3> Search for Songs, Albums, or Artists </h3>
 
                 <form class = "dash-search-bar-main" >
-                    
-
                     <input 
                         className = "dash-search-bar"
                         name = "searchTerm" 

@@ -5,6 +5,13 @@
     transform: translate(-50%, -50%);
 }
 
+.dash-currentuser {
+    position: absolute;
+    top: 12%;
+    left: 85%;
+    transform: translate(-50%, -50%);
+}
+
 .dash-clear-icon {
     position: absolute;
     top: 77px;
