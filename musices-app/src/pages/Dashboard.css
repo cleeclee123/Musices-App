@@ -62,18 +62,26 @@ form.dash-search-bar-main::after {
     top: 200px;
 }
 
+.dash-result-wrapper {
+    padding: 1rem;
+    overflow: hidden;
+}
+
 .dash-result-image {
     height: 128px;
     width: 128px;
+    float: left;
+}
+
+.dash-result-artist {
+    color: grey;
+    padding-top: 5px;
 }
 
 .dash-result-info {
-    
-    
-
+    padding: 1rem;
+    overflow: hidden;
 }
-
-
 
   
 .signout-button-parent {

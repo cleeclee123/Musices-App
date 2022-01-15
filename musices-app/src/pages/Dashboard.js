@@ -8,6 +8,7 @@ import axios from 'axios';
 import TrackSearchResult from './components/TrackSearchResult';
 import './Dashboard.css';
 
+
 const spotifyApi = new SpotifyWebApi({
     clientId: "f5910041cd764887a9ddb43e035a8b8a",  
 })
@@ -61,6 +62,7 @@ const Dashboard = (props) => {
     // Search Bar Stuff
     const [search, setSearch] = useState("");
     const [SearchResults, setSearchResults] = useState([]);
+    const [isMounted, setIsMounted] = useState(true);
     const [formData, setFormData] = useState({ userQuery: "" });
 
     useEffect(() => {
@@ -78,13 +80,13 @@ const Dashboard = (props) => {
             return setSearchResults([]);
         }
 
-        let cancel = false;
+        let unmounted = false;
+
         spotifyApi.searchTracks(search).then(res => {
             setSearchResults(res.body.tracks.items.map(track => {
-                
-                if (cancel) {
-                    return
-                }
+                if (unmounted) return [];
+                setIsMounted(false);
+
                 const smallestAlbumImage = track.album.images.reduce((smallest, image) => {
                     if (image.height < smallest.height) {
                         return image
@@ -101,7 +103,9 @@ const Dashboard = (props) => {
             }))
         })
 
-        return () => cancel = true;
+        return () => { 
+            unmounted = true;
+        }
     }, [search, token])
 
     console.log(SearchResults);
@@ -163,7 +167,7 @@ const Dashboard = (props) => {
                         <div className = 'dash-result-image-main'> <img className = 'dash-result-image' src = {track.albumUrl} /> </div>
                         <div className = 'dash-result-info'>
                             <div className = 'dash-result-title'> {track.title}  </div>
-                            <div className = 'dash-result-artist'> {track.artist} </div>
+                            <div className = 'dash-result-artist'> <i> {track.artist} </i> </div>
                         </div>
                     </div>
                     /* <TrackSearchResult track = {track} key = {track.uri} /> */
@@ -176,7 +180,6 @@ const Dashboard = (props) => {
                 </Link>
             </div>
             
-
         </div>
     )   
 };
