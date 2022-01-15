@@ -139,6 +139,7 @@ const Dashboard = (props) => {
         setPlayingTrack(track)
         setSearch('')
     }
+
     function handlePlay() {
 
     }
@@ -174,7 +175,7 @@ const Dashboard = (props) => {
 
            <div className = 'dashboard-search-results'> 
                 {SearchResults.map(track => (
-                    <div className = 'dash-result-wrapper' onClick = {handlePlay}> 
+                    <div className = 'dash-result-wrapper' onClick = {chooseTrack}> 
                         <div className = 'dash-result-image-main'> <img className = 'dash-result-image' src = {track.albumUrl} /> </div>
                         <div className = 'dash-result-info'>
                             <div className = 'dash-result-title'> {track.title}  </div>
@@ -187,7 +188,8 @@ const Dashboard = (props) => {
 
            <div className = 'dashboard-spotify-player'>
                     <SpotifyPlayer 
-                        token = {token}
+                       token = {token}
+                      /*  uris = {playingTrack.uri} */
                     />
            </div>
                 
