@@ -50,32 +50,53 @@ const Dashboard = () => {
 			setToken(tokenresponse.data.access_token);
         }).catch(error => console.log(error));
 
-
 	}, []);
 
+    // Search Bar Stuff
+    const clearIcon = document.querySelector(".clear-icon");
+    const searchBar = document.querySelector(".search");
+ 
+    /* searchBar.addEventListener("keyup", () => {
+        if (searchBar.value && clearIcon.style.visibility != "visible") {
+            clearIcon.style.visibility = "visible";
+        } else if (!searchBar.value) {
+            clearIcon.style.visibility = "hidden";
+        }
+    });
+
+    clearIcon.addEventListener("click", () => {
+        searchBar.value = "";
+        clearIcon.style.visibility = "hidden";
+    }) */
 
     return ( 
         <div className = 'dashboard-main'> 
 
             <div className = 'dashboard-user-info'> 
-                <p>
+                <small>
                     Name: {getName(currentUser)} <br></br>
                     Email: {user?.email} <br></br>
                     UID: {user?.uid} <br></br>
                     Access Token: {token} <br></br> 
-                </p>
+                </small>
             </div>
 
-           
+            <div className = 'dashboard-search-parent'>
+                <h3> Search for Songs, Albums, or Artists </h3>
+
+                <form class = "dash-search-bar">
+                    <input type = "text" placeholder = "Search.." name = "search" size = "70"/>
+                    <button type="submit"> <i class="fa fa-search"> Go </i> </button>
+                </form>
+
+            </div>
+                
             <div className = 'signout-button-parent'>
                 <Link to = "/home">
                     <button className = "signout-button" onClick = {() => signOut(getAuth())}> Sign out </button>
                 </Link>
             </div>
             
-            <div className = 'player-login-parent'>        
-                <Link to = "/player"> <button className = "player-login" > Go to Player </button> </Link>
-            </div>
 
         </div>
     )   
