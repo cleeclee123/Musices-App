@@ -143,9 +143,9 @@ const Dashboard = (props) => {
                         onChange = {event => setSearch(event.target.value)}
                         placeholder = "Search" 
                         autoComplete = 'off'
-                        size = "150" 
+                        size = "200" 
                     />
-                    <button type = "submit"> <i> Go </i> </button>
+                    {/* <button type = "submit"> <i> Go </i> </button> */}
                     <img 
                         className = "dash-clear-icon" 
                         onClick = {handleClear} 
