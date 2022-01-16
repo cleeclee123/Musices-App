@@ -152,7 +152,7 @@ const Dashboard = (props) => {
 
     function chooseTrack(track) {
         setPlayingTrack(track)
-        setSearch("")
+        // setSearch("")
     }
     
     return ( 
