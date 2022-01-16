@@ -11,7 +11,7 @@ import WebPlayer from './components/WebPlayer'
 import './Dashboard.css';
 
 
-// cheeky token refresh 
+// cheeky token refresh (idk if it actually works) (just refreshes the page lol)
 window.setTimeout(function () {
     window.location.reload();
 }, 3300000);
@@ -112,11 +112,16 @@ const Dashboard = (props) => {
         // useEffect clean up function
         let unmounted = false;
 
+        // uses 'search' as our request to spotify-web-api-node 
         spotifyApi.searchTracks(search).then(res => {
+            // maps everything to track as entry variable (track.title, track.artist, track.etc)
             setSearchResults(res.body.tracks.items.map(track => {
+
+                // clean up function/handles bad searchs (returns emptyt array)
                 if (unmounted) return [];
                 setIsMounted(false);
 
+                // Gets the smallest available image from spotify
                 const smallestAlbumImage = track.album.images.reduce((smallest, image) => {
                     if (image.height < smallest.height) {
                         return image
@@ -124,6 +129,7 @@ const Dashboard = (props) => {
                     return smallest
                 },  track.album.images[0])
 
+                // Sets the data we want from the spotify api
                 return {
                     artist: track.artists[0].name,
                     title: track.name,
