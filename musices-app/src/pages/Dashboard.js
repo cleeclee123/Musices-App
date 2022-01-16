@@ -6,12 +6,9 @@ import { Link } from 'react-router-dom';
 import SpotifyWebApi from 'spotify-web-api-node';
 import axios from 'axios';
 import SpotifyPlayer from 'react-spotify-web-playback';
+import TrackSearchResult from './components/TrackSearchResult';
+import WebPlayer from './components/WebPlayer'
 import './Dashboard.css';
-
-
-const spotifyApi = new SpotifyWebApi({
-    clientId: "f5910041cd764887a9ddb43e035a8b8a",  
-})
 
 
 // cheeky token refresh 
@@ -19,20 +16,37 @@ window.setTimeout(function () {
     window.location.reload();
 }, 3300000);
 
+const spotifyApi = new SpotifyWebApi({
+    clientId: "f5910041cd764887a9ddb43e035a8b8a",  
+})
+
+const getReturnedParamsFromSpotifyAuth = (hash) => {
+    const stringAfterHashtag = hash.substring(1);
+    const paramsInUrl = stringAfterHashtag.split("&");
+    const paramsSplitUp = paramsInUrl.reduce((accumulater, currentValue) => {
+        console.log(currentValue);
+        const [key, value] = currentValue.split("=");
+        accumulater[key] = value;
+        return accumulater;
+    }, {});
+  
+    return paramsSplitUp;
+};
+
 
 const Dashboard = (props) => {
     const { user } = useAuthState();
     const [currentUser, setCurrentUser] = useState([]);
     const [token, setToken] = useState('');
 
-    const collectionRef = collection(db, 'users');
+    /* const collectionRef = collection(db, 'users');
     const queryRef = query(collectionRef, where("email", "==", user?.email))
     
     useEffect( () =>
         onSnapshot(queryRef, (snapshot) =>
             setCurrentUser(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
         ), []
-    );
+    ); */
 
     function getName(data) {
         let names = [];
@@ -42,23 +56,25 @@ const Dashboard = (props) => {
         return names;
     }
 
-   var Buffer = require('buffer/').Buffer
+    useEffect(() => {
+        if (window.location.hash) {
+            const { access_token, expires_in, token_type } =
+                getReturnedParamsFromSpotifyAuth(window.location.hash);
+    
+            localStorage.clear();
+    
+            localStorage.setItem("accessToken", access_token);
+            localStorage.setItem("tokenType", token_type);
+            localStorage.setItem("expiresIn", expires_in);
+        }
+    });
 
     useEffect(() => {
-		axios('https://accounts.spotify.com/api/token', {
-			'method': 'POST',
-			'headers': {
-				 'Content-Type':'application/x-www-form-urlencoded',
-				 'Authorization': 'Basic ' + (new Buffer('f5910041cd764887a9ddb43e035a8b8a' + ':' + '5ee27ed26cac40d6a98aa43ce98478b5').toString('base64')),
-			},
-			data: 'grant_type=client_credentials'
-		}).then(tokenresponse => {
-			console.log(tokenresponse.data.access_token);
-			setToken(tokenresponse.data.access_token);
-        }).catch(error => console.log(error));
-
-	}, []);
-
+        if (localStorage.getItem("accessToken")) {
+            setToken(localStorage.getItem("accessToken"));
+        }
+    }, []);
+    
     // Search Bar Stuff
     const [search, setSearch] = useState("");
     const [SearchResults, setSearchResults] = useState([]);
@@ -108,7 +124,6 @@ const Dashboard = (props) => {
         }
     }, [search, token])
 
-    console.log(SearchResults);
 
     const handleClear = () => {
         setFormData({ searchTerm: "" });
@@ -117,7 +132,7 @@ const Dashboard = (props) => {
     const clearIcon = document.querySelector(".dash-clear-icon");
     const searchBar = document.querySelector(".dash-search-bar");
 
-    window.onload=function(){
+    window.onload = function() {
         searchBar.addEventListener("keyup", () => {
             if (searchBar.value && clearIcon.style.visibility !== "visible") {
                 clearIcon.style.visibility = "visible";
@@ -137,17 +152,13 @@ const Dashboard = (props) => {
 
     function chooseTrack(track) {
         setPlayingTrack(track)
-        setSearch('')
-    }
-
-    function handlePlay() {
-
+        setSearch("")
     }
     
     return ( 
         <div className = 'dashboard-main'> 
             <div className = 'dash-currentuser'> 
-                <h1> Hi {getName(currentUser)} </h1>
+                <h1> Hi User {/* {getName(currentUser)} */} </h1>
             </div>
 
             <div className = 'dashboard-search-parent'>
@@ -175,22 +186,28 @@ const Dashboard = (props) => {
 
            <div className = 'dashboard-search-results'> 
                 {SearchResults.map(track => (
-                    <div className = 'dash-result-wrapper' onClick = {chooseTrack}> 
-                        <div className = 'dash-result-image-main'> <img className = 'dash-result-image' src = {track.albumUrl} /> </div>
-                        <div className = 'dash-result-info'>
+                    <div className = 'dash-result-wrapper'> 
+                    {/* <div className = 'dash-result-image-main'> <img className = 'dash-result-image' src = {track.albumUrl} /> </div>
+                        <div className = 'dash-result-info' onClick = {chooseTrack} >
                             <div className = 'dash-result-title'> {track.title}  </div>
                             <div className = 'dash-result-artist'> <i> {track.artist} </i> </div>
-                        </div>
+                            <div className = 'dash-result-uri'> <i> {track.uri} </i> </div>
+                        </div> */}
+
+                        <TrackSearchResult 
+                            track = {track}
+                            chooseTrack = {chooseTrack}
+                            key = {track.uri}
+                        />
                     </div>
-                    /* <TrackSearchResult track = {track} key = {track.uri} /> */
                 ))}
            </div>
 
            <div className = 'dashboard-spotify-player'>
-                    <SpotifyPlayer 
-                       token = {token}
-                       uris = {playingTrack}
-                    />
+                <WebPlayer
+                    accessToken = {token}
+                    trackUri = {playingTrack?.uri}
+                />
            </div>
                 
             <div className = 'signout-button-parent'>

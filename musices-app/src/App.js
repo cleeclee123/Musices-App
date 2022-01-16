@@ -9,6 +9,7 @@ import SignIn from "./pages/SignIn";
 import Dashboard from './pages/Dashboard';
 import User from './pages/User';
 import Error from './pages/Error';
+import Test from './pages/test';
 import { AuthProvider } from "./context/auth";
 import { AuthContextProvider, auth /* useAuthState */ } from './firebase/config';
 import { onAuthStateChanged } from "firebase/auth";
@@ -66,9 +67,11 @@ function App() {
 					<Route path = '/about' exact component = {About} />
 					<Route exact path = "/signup" component = {SignUp} />
         			<Route exact path = "/signin" component = {SignIn} />
-					<PrivateRoute path = "/dashboard"> <Dashboard/> </PrivateRoute>
+					<Route path = "/dashboard"> <Dashboard/> </Route>
+					{/* <PrivateRoute path = "/dashboard"> <Dashboard/> </PrivateRoute> */}
 					<PrivateRoute path = "/user"> <User/> </PrivateRoute>
 					<Route exact path = "/404" component = {Error} />
+					<Route exact path = "/test" component = {Test} />
 				</Switch>
 			</Router> 
 		</AuthProvider>

@@ -1,0 +1,21 @@
+.dash-result-wrapper {
+    padding: 1rem;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.dash-result-image {
+    height: 128px;
+    width: 128px;
+    float: left;
+}
+
+.dash-result-artist {
+    color: grey;
+    padding-top: 5px;
+}
+
+.dash-result-info {
+    padding: 1rem;
+    overflow: hidden;
+}
