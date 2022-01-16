@@ -51,14 +51,17 @@ const Dashboard = (props) => {
     
     // cross reference's useAuthState current user's email with the email in firestore, if match
     // grabs user's name from firestore and displays on dashboard (greeting)
-    /* const collectionRef = collection(db, 'users');
+
+    /* 
+    const collectionRef = collection(db, 'users');
     const queryRef = query(collectionRef, where("email", "==", user?.email))
     
     useEffect( () =>
         onSnapshot(queryRef, (snapshot) =>
             setCurrentUser(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
         ), []
-    ); */
+    ); 
+    */
 
     function getName(data) {
         let names = [];
@@ -165,6 +168,7 @@ const Dashboard = (props) => {
         setPlayingTrack(track)
         // setSearch("")
     }
+    
     
     return ( 
         <div className = 'dashboard-main'> 
