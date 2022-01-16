@@ -20,6 +20,7 @@ const spotifyApi = new SpotifyWebApi({
     clientId: "f5910041cd764887a9ddb43e035a8b8a",  
 })
 
+// Access Token getter from URL after validation/agreement of request after sign in/sign up
 const getReturnedParamsFromSpotifyAuth = (hash) => {
     const stringAfterHashtag = hash.substring(1);
     const paramsInUrl = stringAfterHashtag.split("&");
@@ -35,10 +36,21 @@ const getReturnedParamsFromSpotifyAuth = (hash) => {
 
 
 const Dashboard = (props) => {
-    const { user } = useAuthState();
-    const [currentUser, setCurrentUser] = useState([]);
-    const [token, setToken] = useState('');
+    const { user } = useAuthState(); // current user call from firebase auth
+    const [currentUser, setCurrentUser] = useState([]); // store current user 
+    const [token, setToken] = useState(''); // stores generated token from spotify api
+    const [search, setSearch] = useState(""); // current user search/query
+    const [SearchResults, setSearchResults] = useState([]); // artist, title, album image from spotify api given search
+    const [isMounted, setIsMounted] = useState(true); // for useEffect Clean up function
+    const [formData, setFormData] = useState({ userQuery: "" }); // for clearing search bar
+    const [playingTrack, setPlayingTrack] = useState();
 
+    // Firebase call to get current user's name
+    // useAuthState from firebase Authentication only stores identifier (email), dates, and uid. 
+    // Sign Up collects user's name, email, password, and date created in firestore database. 
+    
+    // cross reference's useAuthState current user's email with the email in firestore, if match
+    // grabs user's name from firestore and displays on dashboard (greeting)
     /* const collectionRef = collection(db, 'users');
     const queryRef = query(collectionRef, where("email", "==", user?.email))
     
@@ -56,6 +68,7 @@ const Dashboard = (props) => {
         return names;
     }
 
+    // Access token, token type, and expires set in local storage
     useEffect(() => {
         if (window.location.hash) {
             const { access_token, expires_in, token_type } =
@@ -69,18 +82,14 @@ const Dashboard = (props) => {
         }
     });
 
+    // Retrieves access token from local storage
     useEffect(() => {
         if (localStorage.getItem("accessToken")) {
             setToken(localStorage.getItem("accessToken"));
         }
     }, []);
     
-    // Search Bar Stuff
-    const [search, setSearch] = useState("");
-    const [SearchResults, setSearchResults] = useState([]);
-    const [isMounted, setIsMounted] = useState(true);
-    const [formData, setFormData] = useState({ userQuery: "" });
-
+    // Set current access token with the spotify api
     useEffect(() => {
         if (!token) {
             return
@@ -88,6 +97,7 @@ const Dashboard = (props) => {
         spotifyApi.setAccessToken(token)
     }, [token])
 
+    // Getting the artist, song title, and uri from spotify api given search
     useEffect(() => {
         if (!token) {
             return
@@ -96,6 +106,7 @@ const Dashboard = (props) => {
             return setSearchResults([]);
         }
 
+        // useEffect clean up function
         let unmounted = false;
 
         spotifyApi.searchTracks(search).then(res => {
@@ -119,12 +130,13 @@ const Dashboard = (props) => {
             }))
         })
 
+        // clean up function return
         return () => { 
             unmounted = true;
         }
     }, [search, token])
 
-
+    // Clear function ('x' on the end of the search bar)
     const handleClear = () => {
         setFormData({ searchTerm: "" });
     };
@@ -147,9 +159,8 @@ const Dashboard = (props) => {
         })
     }
 
-    // Playback
-    const [playingTrack, setPlayingTrack] = useState();
-
+    // Spotify Web Playback SDK 
+    // Current Track handler, keeps track of what track is clicked
     function chooseTrack(track) {
         setPlayingTrack(track)
         // setSearch("")
