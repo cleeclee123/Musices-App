@@ -84,6 +84,11 @@ form.dash-search-bar-main::after {
     overflow: hidden;
 }
 
+.dash-result-lyrics {
+    text-align: center;
+    overflow-wrap: normal;
+}
+
 .dashboard-spotify-player {
     position: fixed;
     bottom: 0;

@@ -5,7 +5,6 @@ import { collection, query, where, onSnapshot } from "firebase/firestore";
 import { Link } from 'react-router-dom';
 import SpotifyWebApi from 'spotify-web-api-node';
 import axios from 'axios';
-import SpotifyPlayer from 'react-spotify-web-playback';
 import TrackSearchResult from './components/TrackSearchResult';
 import WebPlayer from './components/WebPlayer'
 import './Dashboard.css';
@@ -37,6 +36,7 @@ const getReturnedParamsFromSpotifyAuth = (hash) => {
 
 const Dashboard = (props) => {
     const { user } = useAuthState(); // current user call from firebase auth
+    // set state for dashboard variables
     const [currentUser, setCurrentUser] = useState([]); // store current user 
     const [token, setToken] = useState(''); // stores generated token from spotify api
     const [search, setSearch] = useState(""); // current user search/query
@@ -44,6 +44,7 @@ const Dashboard = (props) => {
     const [isMounted, setIsMounted] = useState(true); // for useEffect Clean up function
     const [formData, setFormData] = useState({ userQuery: "" }); // for clearing search bar
     const [playingTrack, setPlayingTrack] = useState();
+    const [lyrics, setLyrics] = useState("");
 
     // Firebase call to get current user's name
     // useAuthState from firebase Authentication only stores identifier (email), dates, and uid. 
@@ -92,7 +93,7 @@ const Dashboard = (props) => {
         }
     }, []);
     
-    // Set current access token with the spotify api
+    // hook that sets current access token with the spotify api
     useEffect(() => {
         if (!token) {
             return
@@ -100,7 +101,7 @@ const Dashboard = (props) => {
         spotifyApi.setAccessToken(token)
     }, [token])
 
-    // Getting the artist, song title, and uri from spotify api given search
+    // hook for getting the artist, song title, and uri from spotify api given search
     useEffect(() => {
         if (!token) {
             return
@@ -170,11 +171,27 @@ const Dashboard = (props) => {
 
     // Spotify Web Playback SDK 
     // Current Track handler, keeps track of what track is clicked
+    // After click, clears search bar, clears lyrics 
     function chooseTrack(track) {
-        setPlayingTrack(track)
-        // setSearch("")
+        setPlayingTrack(track);
+        setSearch("");
+        setLyrics("");
     }
     
+    // hook call to the server (api) to access the lyrics
+    useEffect(() => {
+        if (!playingTrack) return
+
+        axios.get('http://localhost:3001/lyrics', {
+            params: {
+                track: playingTrack.title,
+                artist: playingTrack.artist,
+            }  
+        }).then(res => {
+            setLyrics(res.data.lyrics)
+            console.log(res.data.lyrics)
+        })
+    }, [playingTrack])
     
     return ( 
         <div className = 'dashboard-main'> 
@@ -222,6 +239,12 @@ const Dashboard = (props) => {
                         />
                     </div>
                 ))}
+
+                {SearchResults.length === 0 && (
+                    <div className = 'dash-result-lyrics'>
+                        {lyrics}
+                    </div>
+                )}
            </div>
 
            <div className = 'dashboard-spotify-player'>
