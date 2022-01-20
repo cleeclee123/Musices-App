@@ -86,7 +86,13 @@ form.dash-search-bar-main::after {
 
 .dash-result-lyrics {
     text-align: center;
+    line-height: 200%;
+    font-size: 20px;
     overflow-wrap: normal;
+    padding-top: 7rem;
+    padding-right: 25rem;
+    padding-left: 25rem;
+    padding-bottom: 10rem;
 }
 
 .dashboard-spotify-player {
