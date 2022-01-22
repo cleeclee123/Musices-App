@@ -196,7 +196,7 @@ const Dashboard = (props) => {
     return ( 
         <div className = 'dashboard-main'> 
             <div className = 'dash-currentuser'> 
-                <h1> Hi User {/* {getName(currentUser)} */} </h1>
+                <h1> Hi {user?.email} </h1>
             </div>
 
             <div className = 'dashboard-search-parent'>
