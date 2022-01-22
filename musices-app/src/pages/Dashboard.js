@@ -7,6 +7,7 @@ import SpotifyWebApi from 'spotify-web-api-node';
 import axios from 'axios';
 import TrackSearchResult from './components/TrackSearchResult';
 import WebPlayer from './components/WebPlayer'
+import NewsCard from './components/MusicNews';
 import './Dashboard.css';
 
 
@@ -225,7 +226,7 @@ const Dashboard = (props) => {
                 `http://newsapi.org/v2/everything?q=music&from=${today}&sortBy=publishedAt&apiKey=${newsApiKey}`
             );
             setMusicNews(response.data.articles);
-            //console.log(response);
+            console.log(response.data.articles);
         }
         getMusicNews();
     }, []);
@@ -287,10 +288,9 @@ const Dashboard = (props) => {
                             chooseTrack = {chooseTrack}
                             key = {track.uri}
                         />
-                        
-
                     </div>
                 ))}
+
                 {SearchResults.length === 0 && (
                     <div className = 'dash-result-lyrics'>
                         <div className = "dash-result-lyrics-artist">
@@ -307,6 +307,14 @@ const Dashboard = (props) => {
                     </div>
                 )}
            </div>
+
+           <div className = 'dash-result-news-wrapper'>
+                    <h1> hello </h1>
+                    {musicNews.map(({ title, description, url, urlToImage }) => {
+                        
+                    })}
+            </div>
+
 
            <div className = 'dashboard-spotify-player'>
                 <WebPlayer

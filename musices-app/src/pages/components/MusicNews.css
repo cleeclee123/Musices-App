@@ -1,0 +1,11 @@
+.news-card-main {
+    float: right;
+    width: 400px;
+    padding: 20px;
+    border: 1px solid;
+    margin-bottom: 20px;
+}
+
+.news-card-image {
+    width: 300px;
+}

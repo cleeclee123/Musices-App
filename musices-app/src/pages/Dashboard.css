@@ -117,6 +117,13 @@ form.dash-search-bar-main::after {
     transform: translate(-50%, -50%);
 }
 
+.dash-result-news-wrapper {
+    position: absolute;
+    top: 20%;
+    left: 80%;
+    transform: translate(-50%, -50%);
+}
+
 .signout-button {
     display: inline-block;
     padding: 10px 20px;
