@@ -45,9 +45,29 @@ const Dashboard = (props) => {
     const [formData, setFormData] = useState({ userQuery: "" }); // for clearing search bar
     const [playingTrack, setPlayingTrack] = useState();
     const [lyrics, setLyrics] = useState("");
-    const [news, setNews] = useState("");
+    const [musicNews, setMusicNews] = useState([]);
+    const [artistNews, setArtistNews] = useState([]);
     const [currentArtist, setCurrentArtist] = useState("");
     const [currentTitle, setCurrentTitle] = useState("");
+
+    // api key for newsapi.org
+    const newsApiKey = "07205f57d2b5457f98a0a26b45d3f7c2";
+
+    // calculate current date for most updated news about music industry
+    var today = new Date();
+    var ddToday = String(today.getDate()).padStart(2, '0');
+    var mmToday = String(today.getMonth() + 1).padStart(2, '0'); 
+    var yyyyToday = today.getFullYear();
+
+    today = yyyyToday + '-' + mmToday + '-' + ddToday;
+
+    // calculate date from a week today for updated news about current artist
+    var weekAgo = new Date();
+    var ddWeek = String(weekAgo.getDate()).padStart(2, '0') - 7;
+    var mmWeek = String(weekAgo.getMonth() + 1).padStart(2, '0'); 
+    var yyyyWeek = weekAgo.getFullYear();
+
+    weekAgo = yyyyWeek + '-' + mmWeek + '-' + ddWeek;
 
     // Firebase call to get current user's name
     // useAuthState from firebase Authentication only stores identifier (email), dates, and uid. 
@@ -199,6 +219,29 @@ const Dashboard = (props) => {
         })
     }, [playingTrack])
 
+    useEffect(() => {
+        const getMusicNews = async () => {
+            const response = await axios.get(
+                `http://newsapi.org/v2/everything?q=music&from=${today}&sortBy=publishedAt&apiKey=${newsApiKey}`
+            );
+            setMusicNews(response.data.articles);
+            //console.log(response);
+        }
+        getMusicNews();
+    }, []);
+
+    useEffect(() => {
+        const getArtistNews = async () => {
+            const response = await axios.get(
+                `http://newsapi.org/v2/everything?q=${currentArtist.replace(/\s/g, '').toLowerCase()}&from=${weekAgo}&sortBy=publishedAt&apiKey=${newsApiKey}`
+            );
+            setArtistNews(response.data.articles);
+            // console.log(response);
+        }
+        getArtistNews();
+    }, []);
+
+    console.log(currentArtist.replace(/\s/g, '').toLowerCase());
     
     return ( 
         <div className = 'dashboard-main'> 
@@ -244,6 +287,8 @@ const Dashboard = (props) => {
                             chooseTrack = {chooseTrack}
                             key = {track.uri}
                         />
+                        
+
                     </div>
                 ))}
                 {SearchResults.length === 0 && (
@@ -255,6 +300,10 @@ const Dashboard = (props) => {
                             {currentTitle}
                         </div>
                         {lyrics}
+
+                        <div className = 'dash-result-artist-news'>
+
+                        </div>
                     </div>
                 )}
            </div>

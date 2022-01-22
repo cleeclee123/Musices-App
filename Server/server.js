@@ -10,13 +10,12 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-var today = new Date();
 var weekAgo = new Date();
-
 var ddW = String(weekAgo.getDate()).padStart(2, '0') - 7;
 var mmW = String(weekAgo.getMonth() + 1).padStart(2, '0'); 
 var yyyyW = weekAgo.getFullYear();
 
+var today = new Date();
 var ddC = String(today.getDate()).padStart(2, '0');
 var mmC = String(today.getMonth() + 1).padStart(2, '0'); 
 var yyyyC = today.getFullYear();
