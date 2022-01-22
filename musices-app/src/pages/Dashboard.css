@@ -84,14 +84,22 @@ form.dash-search-bar-main::after {
     overflow: hidden;
 }
 
+.dash-result-lyrics-artist {
+    font-size: 25px;
+}
+
+.dash-result-lyrics-title {
+    font-size: 25px;
+    padding-bottom: 2rem;
+}
+
 .dash-result-lyrics {
     text-align: center;
     line-height: 200%;
-    font-size: 20px;
+    font-size: 18px;
     overflow-wrap: normal;
-    padding-top: 7rem;
-    padding-right: 25rem;
-    padding-left: 25rem;
+    padding-top: 3rem;
+    padding-right: 75rem;
     padding-bottom: 10rem;
 }
 

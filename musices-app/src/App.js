@@ -13,6 +13,8 @@ import Test from './pages/test';
 import { AuthProvider } from "./context/auth";
 import { AuthContextProvider, auth /* useAuthState */ } from './firebase/config';
 import { onAuthStateChanged } from "firebase/auth";
+import { NewsContextProvider } from "./context/NewsContext";
+
 
 /* 
 const AuthenticatedRoute = ({ component: C, ...props }) => {
@@ -58,6 +60,7 @@ function App() {
 	
 	return ( 
 		<AuthContextProvider> 
+		{/* <NewsContextProvider> */}
 		<AuthProvider>
 			<Router>
 				<Navbar />
@@ -75,6 +78,7 @@ function App() {
 				</Switch>
 			</Router> 
 		</AuthProvider>
+		{/* </NewsContextProvider> */}
 		</AuthContextProvider>
 	);
 

@@ -1,13 +1,29 @@
-const express = require("express")
-const cors = require("cors")
-const bodyParser = require("body-parser")
-const lyricsFinder = require("lyrics-finder")
-const SpotifyWebApi = require("spotify-web-api-node")
+const express = require("express");
+const cors = require("cors");
+const bodyParser = require("body-parser");
+const lyricsFinder = require("lyrics-finder");
+const NewsAPI = require('newsapi');
+const SpotifyWebApi = require("spotify-web-api-node");
 
-const app = express()
-app.use(cors())
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: true }))
+const app = express();
+app.use(cors());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+var today = new Date();
+var weekAgo = new Date();
+
+var ddW = String(weekAgo.getDate()).padStart(2, '0') - 7;
+var mmW = String(weekAgo.getMonth() + 1).padStart(2, '0'); 
+var yyyyW = weekAgo.getFullYear();
+
+var ddC = String(today.getDate()).padStart(2, '0');
+var mmC = String(today.getMonth() + 1).padStart(2, '0'); 
+var yyyyC = today.getFullYear();
+
+today = yyyyC + '-' + mmC + '-' + ddC;
+weekAgo  = yyyyW + '-' + mmW + '-' + ddW;
+
 
 app.post("/refresh", (req, res) => {
     const refreshToken = req.body.refreshToken
@@ -65,4 +81,17 @@ app.get("/lyrics", async (req, res) => {
     res.json({ lyrics })
 })
 
+app.get("/currentNews", (req, res) => {
+    const currentNews =
+        newsapi.v2.topHeadlines({
+            q: req.query.artist,
+            language: 'en',
+            country: 'us'
+        }).then(res => {
+            console.log(res);
+        });
+    res.json({ currentNews })
+})
+
 app.listen(3001)
+

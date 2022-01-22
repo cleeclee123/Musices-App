@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, createContext } from 'react';
 import { getAuth, signOut } from 'firebase/auth'
 import { useAuthState, db } from '../firebase/config'
 import { collection, query, where, onSnapshot } from "firebase/firestore";
@@ -45,6 +45,9 @@ const Dashboard = (props) => {
     const [formData, setFormData] = useState({ userQuery: "" }); // for clearing search bar
     const [playingTrack, setPlayingTrack] = useState();
     const [lyrics, setLyrics] = useState("");
+    const [news, setNews] = useState("");
+    const [currentArtist, setCurrentArtist] = useState("");
+    const [currentTitle, setCurrentTitle] = useState("");
 
     // Firebase call to get current user's name
     // useAuthState from firebase Authentication only stores identifier (email), dates, and uid. 
@@ -175,6 +178,8 @@ const Dashboard = (props) => {
     function chooseTrack(track) {
         setPlayingTrack(track);
         setSearch("");
+        setCurrentArtist("");
+        setCurrentTitle("");
         setLyrics("");
     }
     
@@ -188,10 +193,12 @@ const Dashboard = (props) => {
                 artist: playingTrack.artist,
             }  
         }).then(res => {
+            setCurrentTitle(playingTrack.title)
+            setCurrentArtist(playingTrack.artist)
             setLyrics(res.data.lyrics)
-            console.log(res.data.lyrics)
         })
     }, [playingTrack])
+
     
     return ( 
         <div className = 'dashboard-main'> 
@@ -239,9 +246,14 @@ const Dashboard = (props) => {
                         />
                     </div>
                 ))}
-
                 {SearchResults.length === 0 && (
                     <div className = 'dash-result-lyrics'>
+                        <div className = "dash-result-lyrics-artist">
+                            {currentArtist}
+                        </div> 
+                        <div className = 'dash-result-lyrics-title'>
+                            {currentTitle}
+                        </div>
                         {lyrics}
                     </div>
                 )}
