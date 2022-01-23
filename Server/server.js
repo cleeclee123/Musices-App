@@ -257,6 +257,6 @@ app.get("/currentNews", (req, res) => {
     res.json({ currentNews })
 })
 
-server.listen(port);
+// server.listen(port);
 app.listen(3001);
 
