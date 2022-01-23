@@ -374,6 +374,11 @@ const Dashboard = (props) => {
                     ))}
             </div>
 
+            <div className = 'dash-result-twitter-main'> 
+                <h1> What's Twitter Saying: </h1>
+                
+            </div>
+
 
            <div className = 'dashboard-spotify-player'>
                 <WebPlayer

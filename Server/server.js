@@ -10,6 +10,7 @@ const request = require("request");
 const path = require('path');
 const socketIO = require('socket.io');
 const http = require('http');
+const PORT = 3000;
 
 var weekAgo = new Date();
 var ddW = String(weekAgo.getDate()).padStart(2, '0') - 7;
@@ -25,7 +26,6 @@ today = yyyyC + '-' + mmC + '-' + ddC;
 weekAgo  = yyyyW + '-' + mmW + '-' + ddW;
 
 const app = express();
-let port = 3001;
 const post = util.promisify(request.post);
 const get = util.promisify(request.get);
 
@@ -49,145 +49,121 @@ const streamURL = new URL (
     'https://api.twitter.com/2/tweets/search/stream?tweet.fields=public_metrics&expansions=author_id'
 );
 
-const errorMessage = {
-    title: "Please Wait",
-    detail: "Waiting for new Tweets to be posted...",
-};
-  
-const authMessage = {
-    title: "Could not authenticate",
-    details: [
-      `Please make sure your token is correct.`,
-    ],
-    type: "https://developer.twitter.com/en/docs/authentication",
-};
-  
-const sleep = async (delay) => {
-    return new Promise((resolve) => setTimeout(() => resolve(true), delay));
-};
+const rules = [
+    { value: 'GIVE' }
+]
 
-// get method for twitter api tweet streaming 
-app.get("api/rules", async (req, res) => {
-    if (!TWITTER_TOKEN) {
-        res.status(400).send(authMessage);
-    }
+/* app.get("/lyrics", async (req, res) => {
+    const lyrics =
+        (await lyricsFinder(req.query.artist, req.query.track)) || "No Lyrics Found"
+    res.json({ lyrics })
+}) */
 
-    const token = TWITTER_TOKEN;
-    
-    const requestConfig = {
-        url: rulesURL,
-        auth: {
-            bearer: token,
+// Get stream rules
+async function getRules() {
+    const response = await needle('get', rulesURL, {
+        headers: {
+            Authorization: `Bearer ${TWITTER_TOKEN}`,
         },
-        json: true,
-    };
+    })
+    console.log(response.body)
+    return response.body
+}
 
-    try {
-        const response = await get(requestConfig);
-
-        if (response.statusCode !== 200) {
-            if (response.statusCode === 403) {
-                res.status(403).send(response.body);
-            } else {
-                throw new Error(response.body.error.message);
-            }
-        }
-
-        res.send(response);
-    } catch (error) {
-        res.send(error);
-    }
-});
-
-// post method for twitter api tweet streaming 
-app.post("/api/rules", async (req, res) => {
-    if (!TWITTER_TOKEN) {
-        res.status(400).send(authMessage);
+// Set stream rules
+async function setRules() {
+    const data = {
+        add: rules,
     }
 
-    const token = TWITTER_TOKEN;
-    
-    const requestConfig = {
-        url: rulesURL,
-        auth: {
-            bearer: token,
+    const response = await needle('post', rulesURL, data, {
+        headers: {
+            'content-type': 'application/json',
+
+            Authorization: `Bearer ${TWITTER_TOKEN}`,
         },
-        json: req.body,
-    };
+    })
 
-    try {
-        const response = await post(requestConfig);
+    return response.body
+}
 
-        if (response.statusCode === 200 || response.statusCode === 201) {
-            res.send(response);
-        } else {
-            throw new Error(response);
-        }
-    } catch (error) {
-        res.send(error);
+// Delete stream rules
+async function deleteRules(rules) {
+    if (!Array.isArray(rules.data)) {
+        return null
     }
-});
 
-// streaming tweets
-const streamTweets = (socket, token) => {
-    let stream;
+    const ids = rules.data.map((rule) => rule.id)
 
-    const config = {
-        url: streamURL,
-        auth: {
-            bearer: token,
+    const data = {
+        delete: {
+            ids: ids,
         },
-        timeout: 31000,
-    };
+    }
+
+    const response = await needle('post', rulesURL, data, {
+        headers: {
+            'content-type': 'application/json',
+
+            Authorization: `Bearer ${TWITTER_TOKEN}`,
+        },
+    })
+
+    return response.body
+}
+
+function streamTweets(socket) {
+    const stream = needle.get(streamURL, {
+        headers: {
+            Authorization: `Bearer ${TOKEN}`,
+        },
+    })
+
+    stream.on('data', (data) => {
+        try {
+            const json = JSON.parse(data)
+            console.log(json)
+            socket.emit('tweet', json)
+    } catch (error) {
+
+    }
+  })
+
+  return stream
+}
+
+io.on('connection', async () => {
+    console.log('Client connected...')
+
+    let currentRules
 
     try {
-        const stream = request.get(config);
+        //   Get all stream rules
+        currentRules = await getRules()
 
-        stream.on(
-            "data", (data) => {
-                try {
-                    const json = JSON.parse(data);
+        // Delete all stream rules
+        await deleteRules(currentRules)
 
-                    if (json.connection_issue) {
-                        socket.emit("error", json);
-                        reconnect(stream, socket, token);
-                    } else {
-                        if (json.data) {
-                            socket.emit("tweet", json);
-                        } else {
-                            socket.emit("authError", json);
-                        }
-                    }
-                } catch (error) {
-                    socket.emit("heartbeat");
-                }
-            }
-        )
-        .on("error", (error) => {
-            socket.emit("error", errorMessage);
-            reconnect(stream, socket, token);
-        });
+        // Set rules based on array above
+        await setRules()
     } catch (error) {
-        socket.emit("authError", authMessage);
+        console.error(error)
+        process.exit(1)
     }
-};
 
-const reconnect = async (stream, socket, token) => {
-    timeout++;
-    stream.abort();
-    await sleep(2 ** timeout * 1000);
-    streamTweets(socket, token);
-};
+    const filteredStream = streamTweets(io)
 
-io.on("connection", async (socket) => {
-    try {
-        const token = TWITTER_TOKEN;
-        io.emit("connect", "Clinet connect");
-        const stream = streamTweets(io, token);
-    } catch (error) {
-        io.emit("authError", authMessage);
-    }
-});
+    let timeout = 0
+    filteredStream.on('timeout', () => {
+        // Reconnect on error
+        console.warn('A connection error occurred. Reconnecting…')
+        setTimeout(() => {
+            timeout++
+            streamTweets(io)
+        }, 2 ** timeout)
+        streamTweets(io)
+    })
+})
 
 app.post("/refresh", (req, res) => {
     const refreshToken = req.body.refreshToken
@@ -258,5 +234,6 @@ app.get("/currentNews", (req, res) => {
 })
 
 // server.listen(port);
+// server.listen(PORT, () => console.log(`Listening on port ${PORT}`))
 app.listen(3001);
 

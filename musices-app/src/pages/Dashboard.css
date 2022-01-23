@@ -120,13 +120,13 @@ form.dash-search-bar-main::after {
 .dash-result-lyrics-news-header {
     position: absolute;
     top: 7%;
-    left: 55%;
+    left: 65%;
     transform: translate(-50%, -50%);
 }
 
 .dash-result-news-wrapper {
     text-align: left;
-    padding: 10rem 3rem 2rem 3rem;
+    padding: 10rem 3rem 3rem 3rem;
     float: right;
     width: 30%;
     align-items: end;
@@ -142,6 +142,13 @@ form.dash-search-bar-main::after {
 
 .dash-results-news-image {
     width: 400px;
+}
+
+.dash-result-twitter-main {
+    position: absolute;
+    top: 27%;
+    left: 60%;
+    transform: translate(-50%, -50%);
 }
 
 .signout-button {
