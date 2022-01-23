@@ -328,7 +328,7 @@ const Dashboard = (props) => {
             </div>
 
             <div className = 'dash-result-news-wrapper'>
-                <h1> Global Music News </h1>
+                <h1> Current Global Music News: </h1>
                     {musicNews.map(news => (
                         <div className = 'dash-results-news-card'> 
                             <div className = 'dash-results-news-image-main'> <img className = 'dash-results-news-image' src = {news.urlToImage} alt = "Image" /> </div>
