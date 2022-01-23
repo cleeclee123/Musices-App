@@ -5,18 +5,11 @@ const lyricsFinder = require("lyrics-finder");
 const NewsAPI = require('newsapi');
 const SpotifyWebApi = require("spotify-web-api-node");
 const needle = require('needle');
-
-// declatation/initialization of twitter api bearer token (need to put in env file but im too lazy)
-const TWITTER_TOKEN = "AAAAAAAAAAAAAAAAAAAAAAmmYQEAAAAAMtvfIgDuAw9kAo1vKi1mgBmvy88%3DzOrlZzk3e9PkX4XVrWQVWZvBM5kZlTWi9WtIZlxYSNy3Rtf2I7"
-
-// api endpoints for streams
-const rulesURL = 'https://api.twitter.com/2/tweets/search/stream/rules';
-const streamURL = 'https://api.twitter.com/2/tweets/search/stream?tweet.fields=public_metrics&expansions=author_id'
-
-const app = express();
-app.use(cors());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+const util = require('util');
+const request = require("request");
+const path = require('path');
+const socketIO = require('socket.io');
+const http = require('http');
 
 var weekAgo = new Date();
 var ddW = String(weekAgo.getDate()).padStart(2, '0') - 7;
@@ -31,6 +24,80 @@ var yyyyC = today.getFullYear();
 today = yyyyC + '-' + mmC + '-' + ddC;
 weekAgo  = yyyyW + '-' + mmW + '-' + ddW;
 
+const app = express();
+let port = 3001;
+const post = util.promisify(request.post);
+const get = util.promisify(request.get);
+
+app.use(cors());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+const server = http.createServer(app);
+const io = socketIO(server);
+
+// declatation/initialization of twitter api bearer token (need to put in env file but im too lazy)
+const TWITTER_TOKEN = "AAAAAAAAAAAAAAAAAAAAAAmmYQEAAAAAMtvfIgDuAw9kAo1vKi1mgBmvy88%3DzOrlZzk3e9PkX4XVrWQVWZvBM5kZlTWi9WtIZlxYSNy3Rtf2I7"
+
+let timeout = 0;
+
+// api endpoints for streams
+const rulesURL = new URL (
+    'https://api.twitter.com/2/tweets/search/stream/rules'
+);
+const streamURL = new URL (
+    'https://api.twitter.com/2/tweets/search/stream?tweet.fields=public_metrics&expansions=author_id'
+);
+
+const errorMessage = {
+    title: "Please Wait",
+    detail: "Waiting for new Tweets to be posted...",
+};
+  
+const authMessage = {
+    title: "Could not authenticate",
+    details: [
+      `Please make sure your token is correct.`,
+    ],
+    type: "https://developer.twitter.com/en/docs/authentication",
+};
+  
+const sleep = async (delay) => {
+    return new Promise((resolve) => setTimeout(() => resolve(true), delay));
+};
+
+// get method for twitter api tweet streaming 
+app.get("api/rules", async (req, res) => {
+    if (!TWITTER_TOKEN) {
+        res.status(400).send(authMessage);
+    }
+
+    const token = TWITTER_TOKEN;
+    
+    const requestConfig = {
+        url: rulesURL,
+        auth: {
+            bearer: token,
+        },
+        json: true,
+    };
+
+    try {
+        const response = await get(requestConfig);
+
+        if (response.statusCode !== 200) {
+            if (response.statusCode === 403) {
+                res.status(403).send(response.body);
+            } else {
+                throw new Error(response.body.error.message);
+            }
+        }
+
+        res.send(response);
+    } catch (event) {
+        res.send(event);
+    }
+});
 
 app.post("/refresh", (req, res) => {
     const refreshToken = req.body.refreshToken
