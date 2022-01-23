@@ -155,6 +155,7 @@ const Dashboard = (props) => {
                 },  track.album.images[0])
 
                 // Sets the data we want from the spotify api
+                console.log(track)
                 return {
                     artist: track.artists[0].name,
                     title: track.name,
@@ -223,7 +224,7 @@ const Dashboard = (props) => {
     useEffect(() => {
         const getMusicNews = async () => {
             const response = await axios.get(
-                `http://newsapi.org/v2/everything?q=music&from=${today}&sortBy=publishedAt&apiKey=${newsApiKey}`
+                `http://newsapi.org/v2/everything?q=music&from=${today}&sortBy=publishedAt&language=en&apiKey=${newsApiKey}`
             );
             setMusicNews(response.data.articles);
             // console.log(response.data.articles);
@@ -241,7 +242,6 @@ const Dashboard = (props) => {
         return getArtistNews();
     }, []);
 
-    console.log(currentArtist.replace(/\s/g, '').toLowerCase());
 
     function getTitles(data) {
         let titles = [];
@@ -314,6 +314,10 @@ const Dashboard = (props) => {
                         <div className = 'dash-result-lyrics-title'>
                             {currentTitle}
                         </div>
+                        <div className = 'dash-result-lyrics-news-header'>
+                          
+                        </div>
+ 
                         {lyrics}
 
                         <div className = 'dash-result-artist-news'>

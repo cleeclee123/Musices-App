@@ -117,6 +117,13 @@ form.dash-search-bar-main::after {
     transform: translate(-50%, -50%);
 }
 
+.dash-result-lyrics-news-header {
+    position: absolute;
+    top: 7%;
+    left: 55%;
+    transform: translate(-50%, -50%);
+}
+
 .dash-result-news-wrapper {
     text-align: left;
     padding: 10rem 3rem 2rem 3rem;
