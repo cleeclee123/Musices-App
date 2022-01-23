@@ -118,10 +118,23 @@ form.dash-search-bar-main::after {
 }
 
 .dash-result-news-wrapper {
-    position: absolute;
-    top: 20%;
-    left: 80%;
-    transform: translate(-50%, -50%);
+    text-align: left;
+    padding: 10rem 3rem 2rem 3rem;
+    float: right;
+    width: 30%;
+    align-items: end;
+    margin: 0px 0px 0px auto;
+}
+
+.dash-results-news-card {
+    width: 500px;
+    padding: 20px;
+    border: 1px solid;
+    margin-bottom: 20px;
+}
+
+.dash-results-news-image {
+    width: 400px;
 }
 
 .signout-button {

@@ -52,7 +52,7 @@ const Dashboard = (props) => {
     const [currentTitle, setCurrentTitle] = useState("");
 
     // api key for newsapi.org
-    const newsApiKey = "07205f57d2b5457f98a0a26b45d3f7c2";
+    const newsApiKey = "251992036487443c99f6fe6b280ea2df";
 
     // calculate current date for most updated news about music industry
     var today = new Date();
@@ -226,9 +226,9 @@ const Dashboard = (props) => {
                 `http://newsapi.org/v2/everything?q=music&from=${today}&sortBy=publishedAt&apiKey=${newsApiKey}`
             );
             setMusicNews(response.data.articles);
-            console.log(response.data.articles);
+            // console.log(response.data.articles);
         }
-        getMusicNews();
+        return getMusicNews();
     }, []);
 
     useEffect(() => {
@@ -237,12 +237,27 @@ const Dashboard = (props) => {
                 `http://newsapi.org/v2/everything?q=${currentArtist.replace(/\s/g, '').toLowerCase()}&from=${weekAgo}&sortBy=publishedAt&apiKey=${newsApiKey}`
             );
             setArtistNews(response.data.articles);
-            // console.log(response);
         }
-        getArtistNews();
+        return getArtistNews();
     }, []);
 
     console.log(currentArtist.replace(/\s/g, '').toLowerCase());
+
+    function getTitles(data) {
+        let titles = [];
+        data.map(each => {
+            titles.push(each.title);
+        })
+        return titles;
+    }
+
+    function getDescription(data) {
+        let descriptions = [];
+        data.map(each => {
+            descriptions.push(each.description);
+        })
+        return descriptions;
+    }
     
     return ( 
         <div className = 'dashboard-main'> 
@@ -273,7 +288,7 @@ const Dashboard = (props) => {
                 </form>
             </div>
 
-           <div className = 'dashboard-search-results'> 
+            <div className = 'dashboard-search-results'> 
                 {SearchResults.map(track => (
                     <div className = 'dash-result-wrapper'> 
                     {/* <div className = 'dash-result-image-main'> <img className = 'dash-result-image' src = {track.albumUrl} /> </div>
@@ -306,13 +321,18 @@ const Dashboard = (props) => {
                         </div>
                     </div>
                 )}
-           </div>
+            </div>
 
-           <div className = 'dash-result-news-wrapper'>
-                    <h1> hello </h1>
-                    {musicNews.map(({ title, description, url, urlToImage }) => {
-                        
-                    })}
+            <div className = 'dash-result-news-wrapper'>
+                <h1> Global Music News </h1>
+                    {musicNews.map(news => (
+                        <div className = 'dash-results-news-card'> 
+                            <div className = 'dash-results-news-image-main'> <img className = 'dash-results-news-image' src = {news.urlToImage} alt = "Image" /> </div>
+                            <div className = 'dash-results-news-title'> <a href = {news.url}> <b>{news.title}</b> </a> </div>
+                            <div className = 'dash-results-news-description'> <p> {news.description} </p> </div>
+                            
+                        </div>
+                    ))}
             </div>
 
 
