@@ -10,6 +10,18 @@ import WebPlayer from './components/WebPlayer'
 import NewsCard from './components/MusicNews';
 import './Dashboard.css';
 
+// Twitter stream stuff: 
+
+// declaration/initialization of needle http client
+// const needle = require('needle');
+
+// declatation/initialization of twitter api bearer token (need to put in env file but im too lazy)
+const TWITTER_TOKEN = "AAAAAAAAAAAAAAAAAAAAAAmmYQEAAAAAMtvfIgDuAw9kAo1vKi1mgBmvy88%3DzOrlZzk3e9PkX4XVrWQVWZvBM5kZlTWi9WtIZlxYSNy3Rtf2I7"
+
+// api endpoints for streams
+const rulesURL = 'https://api.twitter.com/2/tweets/search/stream/rules';
+const streamURL = 'https://api.twitter.com/2/tweets/search/stream';
+
 
 // cheeky token refresh (idk if it actually works) (just refreshes the page lol)
 window.setTimeout(function () {
@@ -242,7 +254,7 @@ const Dashboard = (props) => {
         return getArtistNews();
     }, []);
 
-
+    // get info from news api
     function getTitles(data) {
         let titles = [];
         data.map(each => {
@@ -258,6 +270,29 @@ const Dashboard = (props) => {
         })
         return descriptions;
     }
+
+    // twitter tweet streams stuff:
+
+    // rules (query for tweets relating to current artist or title)
+    const rules = [{
+            value: {currentArtist},
+        },
+        {
+            value: {currentTitle},
+        }
+    ];
+
+    // get stream rules
+    /* async function getRules() {
+        const response = await needle('get', rulesURL, {
+            headers: {
+                Authorization: 'Bearer ' + TWITTER_TOKEN
+            }
+        })
+
+        console.log(response.body);
+        return response.body;
+    }  */
     
     return ( 
         <div className = 'dashboard-main'> 

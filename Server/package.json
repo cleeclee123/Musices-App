@@ -15,6 +15,7 @@
     "cors": "^2.8.5",
     "express": "^4.17.2",
     "lyrics-finder": "^21.7.0",
+    "needle": "^3.0.0",
     "newsapi": "^2.4.1",
     "spotify-web-api-node": "^5.0.2"
   },

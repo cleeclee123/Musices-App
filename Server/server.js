@@ -4,6 +4,14 @@ const bodyParser = require("body-parser");
 const lyricsFinder = require("lyrics-finder");
 const NewsAPI = require('newsapi');
 const SpotifyWebApi = require("spotify-web-api-node");
+const needle = require('needle');
+
+// declatation/initialization of twitter api bearer token (need to put in env file but im too lazy)
+const TWITTER_TOKEN = "AAAAAAAAAAAAAAAAAAAAAAmmYQEAAAAAMtvfIgDuAw9kAo1vKi1mgBmvy88%3DzOrlZzk3e9PkX4XVrWQVWZvBM5kZlTWi9WtIZlxYSNy3Rtf2I7"
+
+// api endpoints for streams
+const rulesURL = 'https://api.twitter.com/2/tweets/search/stream/rules';
+const streamURL = 'https://api.twitter.com/2/tweets/search/stream?tweet.fields=public_metrics&expansions=author_id'
 
 const app = express();
 app.use(cors());
