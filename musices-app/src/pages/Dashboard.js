@@ -273,26 +273,6 @@ const Dashboard = (props) => {
 
     // twitter tweet streams stuff:
 
-    // rules (query for tweets relating to current artist or title)
-    const rules = [{
-            value: {currentArtist},
-        },
-        {
-            value: {currentTitle},
-        }
-    ];
-
-    // get stream rules
-    /* async function getRules() {
-        const response = await needle('get', rulesURL, {
-            headers: {
-                Authorization: 'Bearer ' + TWITTER_TOKEN
-            }
-        })
-
-        console.log(response.body);
-        return response.body;
-    }  */
     
     return ( 
         <div className = 'dashboard-main'> 

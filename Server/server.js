@@ -5,12 +5,9 @@ const lyricsFinder = require("lyrics-finder");
 const NewsAPI = require('newsapi');
 const SpotifyWebApi = require("spotify-web-api-node");
 const needle = require('needle');
-const util = require('util');
-const request = require("request");
-const path = require('path');
-const socketIO = require('socket.io');
-const http = require('http');
-const PORT = 3000;
+
+const PORT = 3001;
+
 
 var weekAgo = new Date();
 var ddW = String(weekAgo.getDate()).padStart(2, '0') - 7;
@@ -26,145 +23,144 @@ today = yyyyC + '-' + mmC + '-' + ddC;
 weekAgo  = yyyyW + '-' + mmW + '-' + ddW;
 
 const app = express();
-const post = util.promisify(request.post);
-const get = util.promisify(request.get);
-
 app.use(cors());
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
 
-const server = http.createServer(app);
-const io = socketIO(server);
+// declaration/initialization of twitter api bearer token (need to put in env file but im too lazy)
+const TWITTER_TOKEN = "AAAAAAAAAAAAAAAAAAAAAAmmYQEAAAAATVzoUpPMqhZJykR9%2FfBCGVk9CNQ%3DeJGrXqUI93cHJzD3DNStIS2MfMukULtXHfDMmQSlAkdVVWSRfU"
 
-// declatation/initialization of twitter api bearer token (need to put in env file but im too lazy)
-const TWITTER_TOKEN = "AAAAAAAAAAAAAAAAAAAAAAmmYQEAAAAAMtvfIgDuAw9kAo1vKi1mgBmvy88%3DzOrlZzk3e9PkX4XVrWQVWZvBM5kZlTWi9WtIZlxYSNy3Rtf2I7"
+// twitter rules and tweet streaming api 
+const rulesURL = 'https://api.twitter.com/2/tweets/search/stream/rules';
+const streamURL = 'https://api.twitter.com/2/tweets/search/stream';
 
-let timeout = 0;
-
-// api endpoints for streams
-const rulesURL = new URL (
-    'https://api.twitter.com/2/tweets/search/stream/rules'
-);
-const streamURL = new URL (
-    'https://api.twitter.com/2/tweets/search/stream?tweet.fields=public_metrics&expansions=author_id'
-);
-
+// temp rules
 const rules = [
-    { value: 'GIVE' }
-]
+    {
+        'value': 'music',
+        'tag': 'music'
+    }
+];
 
-/* app.get("/lyrics", async (req, res) => {
-    const lyrics =
-        (await lyricsFinder(req.query.artist, req.query.track)) || "No Lyrics Found"
-    res.json({ lyrics })
-}) */
-
-// Get stream rules
-async function getRules() {
+async function getAllRules() {
     const response = await needle('get', rulesURL, {
         headers: {
-            Authorization: `Bearer ${TWITTER_TOKEN}`,
-        },
+            "authorization": `Bearer ${TWITTER_TOKEN}`
+        }
     })
-    console.log(response.body)
-    return response.body
+
+    if (response.statusCode !== 200) {
+        console.log("Error:", response.statusMessage, response.statusCode)
+        throw new Error(response.body);
+    }
+
+    return (response.body);
 }
 
-// Set stream rules
+async function deleteAllRules() {
+    if (!Array.isArray(rules.data)) {
+        return null;
+    }
+
+    const ids = rules.data.map(rule => rule.id);
+
+    const data = {
+        "delete": {
+            "ids": ids
+        }
+    }
+
+    const response = await needle('post', rulesURL, data, {
+        headers: {
+            "content-type": "application/json",
+            "authorization": `Bearer ${TWITTER_TOKEN}`
+        }
+    })
+
+    if (response.statusCode !== 200) {
+        throw new Error(response.body)
+    }
+
+    return (response.body);
+}
+
 async function setRules() {
     const data = {
-        add: rules,
+        "add": rules
     }
 
     const response = await needle('post', rulesURL, data, {
         headers: {
-            'content-type': 'application/json',
-
-            Authorization: `Bearer ${TWITTER_TOKEN}`,
-        },
+            "content-type": "application/json",
+            "authorization": `Bearer ${TWITTER_TOKEN}`
+        }
     })
 
-    return response.body
-}
-
-// Delete stream rules
-async function deleteRules(rules) {
-    if (!Array.isArray(rules.data)) {
-        return null
+    if (response.statusCode !== 200) {
+        throw new Error(response.body);
     }
 
-    const ids = rules.data.map((rule) => rule.id)
-
-    const data = {
-        delete: {
-            ids: ids,
-        },
-    }
-
-    const response = await needle('post', rulesURL, data, {
-        headers: {
-            'content-type': 'application/json',
-
-            Authorization: `Bearer ${TWITTER_TOKEN}`,
-        },
-    })
-
-    return response.body
+    return (response.body);
 }
 
-function streamTweets(socket) {
+function streamConnect(retryAttempt) {
     const stream = needle.get(streamURL, {
         headers: {
-            Authorization: `Bearer ${TOKEN}`,
+            "User-Agent": "v2FilterStreamJS",
+            "Authorization": `Bearer ${TWITTER_TOKEN}`
         },
-    })
+        timeout: 20000
+    });
 
-    stream.on('data', (data) => {
+    stream.on('data', data => {
         try {
-            const json = JSON.parse(data)
-            console.log(json)
-            socket.emit('tweet', json)
-    } catch (error) {
+            const json = JSON.parse(data);
+            console.log(json);
 
-    }
-  })
+            retryAttempt = 0;
+        } catch (error) {
+            if (data.detail === "This stream is currently at the maximum allowed connection limit.") {
+                console.log(data.detail);
+                process.exit(1)
+            } else {
+                // do nothing casue we good
+            }
+        }
+    }).on('err', error => {
+        if (error.code !== 'ECONNRESET') {
+            console.log(error.code);
+            process.exit(1)
+        } else {
+            setTimeout(() => {
+                console.warn("A connection error occurred. Reconnecting...")
+                streamConnect(++retryAttempt);
+            }, 2 ** retryAttempt)
+        }
+    });
 
-  return stream
+    return stream;
 }
 
-io.on('connection', async () => {
-    console.log('Client connected...')
-
-    let currentRules
+(async () => {
+    let currentRules;
 
     try {
-        //   Get all stream rules
-        currentRules = await getRules()
+        // gets current applied rules to stream
+        currentRules = await getAllRules();
 
-        // Delete all stream rules
-        await deleteRules(currentRules)
+        // delete rules function for tweet streaming
+        await deleteAllRules(currentRules);
 
-        // Set rules based on array above
-        await setRules()
+        // add rules to stream (pass in current artist state from fe?)
+        await setRules();
     } catch (error) {
-        console.error(error)
-        process.exit(1)
+        console.log(error);
+        process.exit(1);
     }
 
-    const filteredStream = streamTweets(io)
-
-    let timeout = 0
-    filteredStream.on('timeout', () => {
-        // Reconnect on error
-        console.warn('A connection error occurred. Reconnecting…')
-        setTimeout(() => {
-            timeout++
-            streamTweets(io)
-        }, 2 ** timeout)
-        streamTweets(io)
-    })
+    streamConnect(0);
 })
 
+// spotify refresh access token
 app.post("/refresh", (req, res) => {
     const refreshToken = req.body.refreshToken
     const spotifyApi = new SpotifyWebApi({
@@ -188,6 +184,7 @@ app.post("/refresh", (req, res) => {
     })
 })
 
+// spotify user auth (me for now)
 app.post("/signin", (req, res) => {
     const code = req.body.code
     const spotifyApi = new SpotifyWebApi ({
@@ -215,12 +212,14 @@ app.post("/signin", (req, res) => {
     })
 })
 
+// lyrics library by current artist and current track state for params
 app.get("/lyrics", async (req, res) => {
     const lyrics =
         (await lyricsFinder(req.query.artist, req.query.track)) || "No Lyrics Found"
     res.json({ lyrics })
 })
 
+// news api call
 app.get("/currentNews", (req, res) => {
     const currentNews =
         newsapi.v2.topHeadlines({
@@ -235,5 +234,6 @@ app.get("/currentNews", (req, res) => {
 
 // server.listen(port);
 // server.listen(PORT, () => console.log(`Listening on port ${PORT}`))
-app.listen(3001);
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+// app.listen(3001);
 
